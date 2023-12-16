@@ -1,4 +1,4 @@
-namespace ImageHosting.Storage.Features.Images;
+namespace ImageHosting.Storage.Features.Images.Models;
 
 public class ReadImageDto
 {

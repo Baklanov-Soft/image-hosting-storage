@@ -1,3 +1,5 @@
+using ImageHosting.Storage.Features.Images.Models;
+
 namespace ImageHosting.Storage.Features.Images.Services;
 
 public interface IImageMetadataService

@@ -1,4 +1,5 @@
 using System.Net.Mime;
+using ImageHosting.Storage.Features.Images.Models;
 using ImageHosting.Storage.Features.Images.Services;
 using Microsoft.AspNetCore.Mvc;
 using Minio.DataModel.Response;

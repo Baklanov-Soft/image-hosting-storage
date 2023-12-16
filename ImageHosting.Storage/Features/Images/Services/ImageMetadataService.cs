@@ -1,5 +1,7 @@
-using ImageHosting.Storage.DbContexts;
-using ImageHosting.Storage.Entities;
+using ImageHosting.Persistence.DbContexts;
+using ImageHosting.Persistence.Entities;
+using ImageHosting.Storage.Features.Images.Extensions;
+using ImageHosting.Storage.Features.Images.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -30,8 +32,13 @@ public class ImageMetadataService : IImageMetadataService
     public async Task<List<ReadImageDto>> GetAllowedImagesAsync(CancellationToken cancellationToken = default)
     {
         var list = await _dbContext.Images
-            .Where(i => i.Categories.All(c => !c.Category.Forbidden))
+            .FromSql($"""
+                      select i."UserId", i."ObjectName"
+                      from "Images" i
+                      where not i."Categories" && array(select "Name" from "ForbiddenCategories")
+                      """)
             .ToReadImageDtos(_options.Endpoint)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
         return list;
     }

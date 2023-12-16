@@ -1,6 +1,6 @@
 using ImageHosting.Storage.Features.Images.Services;
 
-namespace ImageHosting.Storage.Features.Images;
+namespace ImageHosting.Storage.Features.Images.Extensions;
 
 public static class ServiceCollectionExtensions
 {

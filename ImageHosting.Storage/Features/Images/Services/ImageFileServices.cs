@@ -1,18 +1,13 @@
+using ImageHosting.Storage.Features.Images.Exceptions;
+using ImageHosting.Storage.Features.Images.Models;
 using Minio;
 using Minio.DataModel.Args;
 using Minio.DataModel.Response;
 
 namespace ImageHosting.Storage.Features.Images.Services;
 
-public class ImageFileServices : IImageFileService
+public class ImageFileServices(IMinioClient minioClient) : IImageFileService
 {
-    private readonly IMinioClient _minioClient;
-
-    public ImageFileServices(IMinioClient minioClient)
-    {
-        _minioClient = minioClient;
-    }
-
     public async Task<PutObjectResponse> UploadImageAsync(UploadImageDto uploadImageDto,
         CancellationToken cancellationToken = default)
     {
@@ -20,12 +15,10 @@ public class ImageFileServices : IImageFileService
 
         var bucketExistsArgs = new BucketExistsArgs()
             .WithBucket(bucketName);
-        var found = await _minioClient.BucketExistsAsync(bucketExistsArgs, cancellationToken).ConfigureAwait(false);
+        var found = await minioClient.BucketExistsAsync(bucketExistsArgs, cancellationToken).ConfigureAwait(false);
         if (!found)
         {
-            var makeBucketArgs = new MakeBucketArgs()
-                .WithBucket(bucketName);
-            await _minioClient.MakeBucketAsync(makeBucketArgs, cancellationToken).ConfigureAwait(false);
+            throw new UserBucketDoesNotExistsException();
         }
 
         var stream = uploadImageDto.Image.OpenReadStream();
@@ -39,7 +32,7 @@ public class ImageFileServices : IImageFileService
                 .WithStreamData(stream)
                 .WithObject(uploadImageDto.Image.FileName);
 
-            return await _minioClient.PutObjectAsync(putObjectArgs, cancellationToken).ConfigureAwait(false);
+            return await minioClient.PutObjectAsync(putObjectArgs, cancellationToken).ConfigureAwait(false);
         }
     }
 }
