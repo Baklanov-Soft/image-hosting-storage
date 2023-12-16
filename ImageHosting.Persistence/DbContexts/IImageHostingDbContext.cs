@@ -1,12 +1,11 @@
-using ImageHosting.Storage.Entities;
+using ImageHosting.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ImageHosting.Storage.DbContexts;
+namespace ImageHosting.Persistence.DbContexts;
 
 public interface IImageHostingDbContext
 {
     DbSet<Image> Images { get; }
-    DbSet<Category> Categories { get; }
-    DbSet<ImageCategory> ImageCategories { get; }
+    DbSet<ForbiddenCategory> ForbiddenCategories { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

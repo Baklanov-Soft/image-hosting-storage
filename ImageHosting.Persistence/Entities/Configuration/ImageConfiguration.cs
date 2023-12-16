@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ImageHosting.Storage.Entities.Configuration;
+namespace ImageHosting.Persistence.Entities.Configuration;
 
 public class ImageConfiguration : IEntityTypeConfiguration<Image>
 {
@@ -9,10 +9,8 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
     {
         builder.HasKey(i => i.Id);
         builder.Property(i => i.ObjectName).HasMaxLength(200);
-        builder.HasMany<ImageCategory>(ic=>ic.Categories)
-            .WithOne(ic => ic.Image)
-            .HasForeignKey(ic => ic.ImageId)
-            .HasPrincipalKey(i => i.Id)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(i => i.Hidden).HasDefaultValue(false);
+        builder.HasIndex(i => i.Hidden);
+        builder.Property(i => i.Categories).HasColumnType("varchar(200)[]");
     }
 }

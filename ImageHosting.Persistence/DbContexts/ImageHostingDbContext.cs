@@ -1,17 +1,16 @@
-using ImageHosting.Storage.Entities;
+using ImageHosting.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ImageHosting.Storage.DbContexts;
+namespace ImageHosting.Persistence.DbContexts;
 
 public class ImageHostingDbContext : DbContext, IImageHostingDbContext
 {
-    public ImageHostingDbContext(DbContextOptions options) : base(options)
+    public ImageHostingDbContext(DbContextOptions<ImageHostingDbContext> options) : base(options)
     {
     }
 
     public DbSet<Image> Images => Set<Image>();
-    public DbSet<Category> Categories => Set<Category>();
-    public DbSet<ImageCategory> ImageCategories => Set<ImageCategory>();
+    public DbSet<ForbiddenCategory> ForbiddenCategories => Set<ForbiddenCategory>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
