@@ -1,5 +1,7 @@
 using ImageHosting.Persistence.DbContexts;
 using ImageHosting.Persistence.Entities;
+using ImageHosting.Storage.Features.Images.Extensions;
+using ImageHosting.Storage.Features.Images.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 

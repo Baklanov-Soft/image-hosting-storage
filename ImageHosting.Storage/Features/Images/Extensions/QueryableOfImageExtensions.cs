@@ -1,6 +1,7 @@
 using ImageHosting.Persistence.Entities;
+using ImageHosting.Storage.Features.Images.Models;
 
-namespace ImageHosting.Storage.Features.Images;
+namespace ImageHosting.Storage.Features.Images.Extensions;
 
 public static class QueryableOfImageExtensions
 {

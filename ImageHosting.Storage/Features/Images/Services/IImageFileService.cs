@@ -1,3 +1,4 @@
+using ImageHosting.Storage.Features.Images.Models;
 using Minio.DataModel.Response;
 
 namespace ImageHosting.Storage.Features.Images.Services;
