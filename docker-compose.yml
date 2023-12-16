@@ -1,0 +1,46 @@
+﻿services:
+  imagehosting.storage:
+    image: imagehosting.storage
+    build:
+      context: .
+      dockerfile: ImageHosting.Storage/Dockerfile
+    environment:
+      Logging__LogLevel__Default: Information
+      Logging__LogLevel__Microsoft.AspNetCore: Warning
+    depends_on:
+      images-storage:
+        condition: service_started
+      metadata-db:
+        condition: service_healthy
+  
+  images-storage:
+    image: quay.io/minio/minio:RELEASE.2023-11-01T18-37-25Z
+    command: server --console-address ":9001" /data
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - images-data:/data
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+  
+  metadata-db:
+    image: postgres:16-alpine3.18
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: image_hosting
+      POSTGRES_USER: image_hosting
+      POSTGRES_PASSWORD: P@ssw0rd
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-d", "image_hosting", "-U", "image_hosting" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  images-data:
+  db-data:
