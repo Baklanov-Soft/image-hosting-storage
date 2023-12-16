@@ -17,16 +17,4 @@ public static class ServiceCollectionExtensions
         
         return services;
     }
-    
-    public static IServiceCollection AddImageHostingDbContext(this IServiceCollection serviceCollection,
-        string connectionStringKey)
-    {
-        return serviceCollection
-            .AddDbContext<IImageHostingDbContext, ImageHostingDbContext>((provider, optionsBuilder) =>
-            {
-                var configuration = provider.GetRequiredService<IConfiguration>();
-                var connectionString = configuration.GetConnectionString(connectionStringKey);
-                optionsBuilder.UseNpgsql(connectionString);
-            });
-    }
 }
