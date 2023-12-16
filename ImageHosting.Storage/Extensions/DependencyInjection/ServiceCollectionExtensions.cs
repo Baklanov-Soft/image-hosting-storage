@@ -1,5 +1,3 @@
-using ImageHosting.Storage.DbContexts;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ImageHosting.Storage.Extensions.DependencyInjection;

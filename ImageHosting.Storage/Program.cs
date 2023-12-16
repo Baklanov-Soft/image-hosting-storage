@@ -1,3 +1,4 @@
+using ImageHosting.Persistence.Extensions.DependencyInjection;
 using ImageHosting.Storage.Extensions.DependencyInjection;
 using ImageHosting.Storage.Features.Images;
 

@@ -1,4 +1,4 @@
-using ImageHosting.Storage.Entities;
+using ImageHosting.Persistence.Entities;
 
 namespace ImageHosting.Storage.Features.Images;
 
