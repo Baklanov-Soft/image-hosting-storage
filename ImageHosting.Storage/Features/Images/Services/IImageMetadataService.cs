@@ -1,11 +1,10 @@
+using System.Threading;
+using System.Threading.Tasks;
 using ImageHosting.Storage.Features.Images.Models;
 
 namespace ImageHosting.Storage.Features.Images.Services;
 
 public interface IImageMetadataService
 {
-    Task WriteMetadataAsync(UploadImageDto uploadImageDto,
-        CancellationToken cancellationToken = default);
-
-    Task<List<ReadImageDto>> GetAllowedImagesAsync(CancellationToken cancellationToken = default);
+    Task WriteMetadataAsync(ImageMetadata imageMetadata, CancellationToken cancellationToken = default);
 }

@@ -1,45 +1,30 @@
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using ImageHosting.Persistence.DbContexts;
-using ImageHosting.Persistence.Entities;
-using ImageHosting.Storage.Features.Images.Extensions;
+using ImageHosting.Storage.Features.Images.Exceptions;
 using ImageHosting.Storage.Features.Images.Models;
+using ImageHosting.Storage.Features.Images.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace ImageHosting.Storage.Features.Images.Services;
 
-public class ImageMetadataService : IImageMetadataService
+public class ImageMetadataService(IImageHostingDbContext dbContext) : IImageMetadataService
 {
-    private readonly IImageHostingDbContext _dbContext;
-    private readonly MinioOptions _options;
-
-    public ImageMetadataService(IImageHostingDbContext dbContext, IOptions<MinioOptions> options)
+    public async Task WriteMetadataAsync(ImageMetadata imageMetadata, CancellationToken cancellationToken = default)
     {
-        _dbContext = dbContext;
-        _options = options.Value;
-    }
-
-    public async Task WriteMetadataAsync(UploadImageDto uploadImageDto, CancellationToken cancellationToken = default)
-    {
-        var entity = new Image
-        {
-            UserId = uploadImageDto.UserId,
-            ObjectName = uploadImageDto.Image.FileName,
-        };
-        _dbContext.Images.Add(entity);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-    }
-
-    public async Task<List<ReadImageDto>> GetAllowedImagesAsync(CancellationToken cancellationToken = default)
-    {
-        var list = await _dbContext.Images
-            .FromSql($"""
-                      select i."UserId", i."ObjectName"
-                      from "Images" i
-                      where not i."Categories" && array(select "Name" from "ForbiddenCategories")
-                      """)
-            .ToReadImageDtos(_options.Endpoint)
+        var readImageDto = await dbContext.Images
+            .Where(i => i.ObjectName == imageMetadata.ObjectName)
+            .ToReadImageDtos()
             .AsNoTracking()
-            .ToListAsync(cancellationToken);
-        return list;
+            .SingleOrDefaultAsync(cancellationToken);
+        if (readImageDto is not null)
+        {
+            throw new ImageMetadataAlreadyExistsException(imageMetadata.ObjectName);
+        }
+        
+        var entity = imageMetadata.ToImage();
+        dbContext.Images.Add(entity);
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 }

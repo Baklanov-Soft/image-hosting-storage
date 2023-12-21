@@ -1,10 +1,10 @@
+using System.Threading;
+using System.Threading.Tasks;
 using ImageHosting.Storage.Features.Images.Models;
-using Minio.DataModel.Response;
 
 namespace ImageHosting.Storage.Features.Images.Services;
 
 public interface IImageFileService
 {
-    Task<PutObjectResponse> UploadImageAsync(UploadImageDto uploadImageDto,
-        CancellationToken cancellationToken = default);
+    Task<UploadResponseDto> WriteFileAsync(ImageFile imageFile, CancellationToken cancellationToken = default);
 }
