@@ -8,8 +8,10 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddImageServices(this IServiceCollection services)
     {
         return services
-            .AddTransient<IImageFileService, ImageFileService>()
-            .AddTransient<IImageMetadataService, ImageMetadataService>()
-            .AddTransient<IUploadImageService, UploadImageService>();
+            .AddTransient<IFileService, FileService>()
+            .AddTransient<IFileUploadCommandFactory, FileUploadCommandFactory>()
+            .AddTransient<IMetadataService, MetadataService>()
+            .AddTransient<IMetadataUploadCommandFactory, MetadataUploadCommandFactory>()
+            .AddTransient<IUploadFileService, UploadFileService>();
     }
 }

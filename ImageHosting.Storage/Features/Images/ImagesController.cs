@@ -12,20 +12,21 @@ namespace ImageHosting.Storage.Features.Images;
 
 [ApiController]
 [Route("[controller]")]
-public class ImagesController(IUploadImageService uploadImageService) : ControllerBase
+public class ImagesController(IUploadFileService uploadFileService) : ControllerBase
 {
     [HttpPost]
-    [ProducesResponseType(typeof(UploadResponseDto), StatusCodes.Status200OK, MediaTypeNames.Application.Json)]
+    [ProducesResponseType(typeof(ReadImageDto), StatusCodes.Status200OK, MediaTypeNames.Application.Json)]
     [Consumes(typeof(UploadImageDto), MediaTypeNames.Multipart.FormData)]
     public async Task<IActionResult> UploadAsync([FromForm] UploadImageDto uploadImageDto,
         CancellationToken cancellationToken)
     {
         var id = Guid.NewGuid();
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? Guid.Empty.ToString();
-        var uploadedAt = DateTime.Now.ToUniversalTime();
-        
+        var uploadedAt = DateTime.UtcNow;
+
         var uploadResponseDto =
-            await uploadImageService.UploadAsync(id, userId, uploadImageDto.Image, uploadedAt, cancellationToken);
+            await uploadFileService.UploadAsync(id, userId, uploadImageDto.Image, hidden: false, uploadedAt,
+                categories: [], cancellationToken);
 
         return Ok(uploadResponseDto);
     }

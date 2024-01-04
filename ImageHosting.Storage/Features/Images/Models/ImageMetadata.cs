@@ -1,9 +1,16 @@
 using System;
+using System.Collections.Generic;
 using ImageHosting.Persistence.Entities;
 
 namespace ImageHosting.Storage.Features.Images.Models;
 
-public class ImageMetadata(Guid id, string objectName, Guid userId, DateTime uploadedAt)
+public class ImageMetadata(
+    Guid id,
+    string objectName,
+    Guid userId,
+    DateTime uploadedAt,
+    bool hidden,
+    List<string> categories)
 {
     public string ObjectName { get; } = objectName;
 
@@ -14,7 +21,9 @@ public class ImageMetadata(Guid id, string objectName, Guid userId, DateTime upl
             Id = id,
             UserId = userId,
             ObjectName = ObjectName,
-            UploadedAt = uploadedAt
+            UploadedAt = uploadedAt,
+            Hidden = hidden,
+            Categories = categories
         };
     }
 }
