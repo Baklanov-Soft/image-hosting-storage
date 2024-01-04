@@ -1,3 +1,5 @@
+using ImageHosting.Storage.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ImageHosting.Storage.Extensions.DependencyInjection;
@@ -9,10 +11,10 @@ public static class ServiceCollectionExtensions
         services.AddOptions<MinioOptions>()
             .BindConfiguration(MinioOptions.SectionName)
             .ValidateDataAnnotations();
-        
+
         services.TryAddSingleton<IMinioClientFactory, MinioClientFactory>();
-        services.TryAddSingleton(sp => sp.GetRequiredService<IMinioClientFactory>().CreateClient());
-        
+        services.TryAddSingleton(sp => sp.GetRequiredService<IMinioClientFactory>().CreateInstance());
+
         return services;
     }
 }

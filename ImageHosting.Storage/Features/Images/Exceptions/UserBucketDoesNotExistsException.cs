@@ -1,16 +1,8 @@
+using System;
+
 namespace ImageHosting.Storage.Features.Images.Exceptions;
 
-public class UserBucketDoesNotExistsException : Exception
+public class UserBucketDoesNotExistsException(string userId) : Exception($"Bucket with id {userId} does not exists.")
 {
-    public UserBucketDoesNotExistsException()
-    {
-    }
-
-    public UserBucketDoesNotExistsException(string message) : base(message)
-    {
-    }
-
-    public UserBucketDoesNotExistsException(string message, Exception inner) : base(message, inner)
-    {
-    }
+    public string UserId { get; } = userId;
 }

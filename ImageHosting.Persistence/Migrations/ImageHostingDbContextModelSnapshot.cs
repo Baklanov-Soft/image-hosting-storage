@@ -31,7 +31,7 @@ namespace ImageHosting.Storage.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("ForbiddenCategories");
+                    b.ToTable("ForbiddenCategories", (string)null);
                 });
 
             modelBuilder.Entity("ImageHosting.Persistence.Entities.Image", b =>
@@ -63,7 +63,7 @@ namespace ImageHosting.Storage.Migrations
 
                     b.HasIndex("Hidden");
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
                 });
 #pragma warning restore 612, 618
         }
