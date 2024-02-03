@@ -1,16 +1,17 @@
 using ImageHosting.Storage.Features.Images.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ImageHosting.Storage.Features.Images.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddImageService(this IServiceCollection services)
+    public static IServiceCollection AddImageServices(this IServiceCollection services)
     {
-        return services.AddTransient<IImageFileService, ImageFileServices>();
-    }
-    
-    public static IServiceCollection AddImageMetadataService(this IServiceCollection services)
-    {
-        return services.AddTransient<IImageMetadataService, ImageMetadataService>();
+        return services
+            .AddTransient<IFileService, FileService>()
+            .AddTransient<IFileUploadCommandFactory, FileUploadCommandFactory>()
+            .AddTransient<IMetadataService, MetadataService>()
+            .AddTransient<IMetadataUploadCommandFactory, MetadataUploadCommandFactory>()
+            .AddTransient<IUploadFileService, UploadFileService>();
     }
 }
