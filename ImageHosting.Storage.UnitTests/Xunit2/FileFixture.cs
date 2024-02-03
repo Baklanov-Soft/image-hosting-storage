@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace ImageHosting.Storage.IntegrationTests.Xunit2;
+namespace ImageHosting.Storage.UnitTests.Xunit2;
 
 public static class FileFixture
 {

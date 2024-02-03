@@ -10,7 +10,7 @@ namespace ImageHosting.Storage.Generic;
 public class RollbackCommands
 {
     private readonly List<IRollbackCommand> _commands = [];
-    
+
     public void Add(IRollbackCommand rollbackCommand)
     {
         _commands.Add(rollbackCommand);
@@ -23,7 +23,7 @@ public class RollbackCommands
             Add(rollbackCommand);
         }
     }
-    
+
     public async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
         Guard.HasSizeGreaterThan(_commands, 1);
@@ -37,8 +37,10 @@ public class RollbackCommands
                 i++;
             }
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            var commandName = _commands[i].GetType().Name;
+
             i--;
             while (i >= 0)
             {
@@ -46,7 +48,7 @@ public class RollbackCommands
                 i--;
             }
 
-            throw new RollbackCommandsException();
+            throw new RollbackCommandsException($"A rollback occurred due to an exception in {commandName}.", e);
         }
     }
 }

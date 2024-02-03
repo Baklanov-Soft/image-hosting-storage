@@ -6,55 +6,70 @@ namespace ImageHosting.Storage.UnitTests.Services;
 
 public class RollbackCommandsTests
 {
-    [Theory, AutoNSubstituteData]
-    public async Task Execute_all_successful([Frozen] IReadOnlyList<IRollbackCommand> commands,
-        RollbackCommands rollbackCommands)
+    [Fact]
+    public async Task Execute_all_successful()
     {
-        rollbackCommands.AddRange(commands);
+        var command1 = Substitute.For<IRollbackCommand>();
+        var command2 = Substitute.For<IRollbackCommand>();
+        var command3 = Substitute.For<IRollbackCommand>();
+        var rollbackCommands = new RollbackCommands();
+        rollbackCommands.Add(command1);
+        rollbackCommands.Add(command2);
+        rollbackCommands.Add(command3);
 
         await rollbackCommands.ExecuteAsync();
 
-        await commands[0].Received().ExecuteAsync();
-        await commands[1].Received().ExecuteAsync();
-        await commands[2].Received().ExecuteAsync();
-        await commands[0].DidNotReceiveWithAnyArgs().RollbackAsync();
-        await commands[1].DidNotReceiveWithAnyArgs().RollbackAsync();
-        await commands[2].DidNotReceiveWithAnyArgs().RollbackAsync();
+        await command1.Received().ExecuteAsync();
+        await command2.Received().ExecuteAsync();
+        await command3.Received().ExecuteAsync();
+        await command1.DidNotReceiveWithAnyArgs().RollbackAsync();
+        await command2.DidNotReceiveWithAnyArgs().RollbackAsync();
+        await command3.DidNotReceiveWithAnyArgs().RollbackAsync();
     }
 
-    [Theory, AutoNSubstituteData]
-    public async Task Execute_error_at_last_rollback([Frozen] IReadOnlyList<IRollbackCommand> commands,
-        RollbackCommands rollbackCommands)
+    [Fact]
+    public async Task Execute_error_at_last_rollback()
     {
-        rollbackCommands.AddRange(commands);
-        commands[2].ExecuteAsync().ThrowsAsyncForAnyArgs<Exception>();
+        var command1 = Substitute.For<IRollbackCommand>();
+        var command2 = Substitute.For<IRollbackCommand>();
+        var command3 = Substitute.For<IRollbackCommand>();
+        var rollbackCommands = new RollbackCommands();
+        rollbackCommands.Add(command1);
+        rollbackCommands.Add(command2);
+        rollbackCommands.Add(command3);
+        command3.ExecuteAsync().ThrowsAsyncForAnyArgs<Exception>();
 
         var act = () => rollbackCommands.ExecuteAsync();
 
         await act.Should().ThrowAsync<RollbackCommandsException>();
-        await commands[0].Received().ExecuteAsync();
-        await commands[1].Received().ExecuteAsync();
-        await commands[2].Received().ExecuteAsync();
-        await commands[0].Received().RollbackAsync();
-        await commands[1].Received().RollbackAsync();
-        await commands[2].DidNotReceiveWithAnyArgs().RollbackAsync();
+        await command1.Received().ExecuteAsync();
+        await command2.Received().ExecuteAsync();
+        await command3.Received().ExecuteAsync();
+        await command1.Received().RollbackAsync();
+        await command2.Received().RollbackAsync();
+        await command3.DidNotReceiveWithAnyArgs().RollbackAsync();
     }
 
-    [Theory, AutoNSubstituteData]
-    public async Task Execute_error_at_first_rollback([Frozen] IReadOnlyList<IRollbackCommand> commands,
-        RollbackCommands rollbackCommands)
+    [Fact]
+    public async Task Execute_error_at_first_rollback()
     {
-        rollbackCommands.AddRange(commands);
-        commands[0].ExecuteAsync().ThrowsAsyncForAnyArgs<Exception>();
+        var command1 = Substitute.For<IRollbackCommand>();
+        var command2 = Substitute.For<IRollbackCommand>();
+        var command3 = Substitute.For<IRollbackCommand>();
+        var rollbackCommands = new RollbackCommands();
+        rollbackCommands.Add(command1);
+        rollbackCommands.Add(command2);
+        rollbackCommands.Add(command3);
+        command1.ExecuteAsync().ThrowsAsyncForAnyArgs<Exception>();
 
         var act = () => rollbackCommands.ExecuteAsync();
 
         await act.Should().ThrowAsync<RollbackCommandsException>();
-        await commands[0].Received().ExecuteAsync();
-        await commands[1].DidNotReceiveWithAnyArgs().ExecuteAsync();
-        await commands[2].DidNotReceiveWithAnyArgs().ExecuteAsync();
-        await commands[0].DidNotReceiveWithAnyArgs().RollbackAsync();
-        await commands[1].DidNotReceiveWithAnyArgs().RollbackAsync();
-        await commands[2].DidNotReceiveWithAnyArgs().RollbackAsync();
+        await command1.Received().ExecuteAsync();
+        await command2.DidNotReceiveWithAnyArgs().ExecuteAsync();
+        await command3.DidNotReceiveWithAnyArgs().ExecuteAsync();
+        await command1.DidNotReceiveWithAnyArgs().RollbackAsync();
+        await command2.DidNotReceiveWithAnyArgs().RollbackAsync();
+        await command3.DidNotReceiveWithAnyArgs().RollbackAsync();
     }
 }

@@ -12,8 +12,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.UnitTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Persistence", "ImageHosting.Persistence\ImageHosting.Persistence.csproj", "{4D2A4C6C-755A-42AA-8366-C8B39564DA37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.IntegrationTests", "ImageHosting.Storage.IntegrationTests\ImageHosting.Storage.IntegrationTests.csproj", "{8EE7EC39-5D2B-4208-9E90-AF398234DFCA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,9 +30,5 @@ Global
 		{4D2A4C6C-755A-42AA-8366-C8B39564DA37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D2A4C6C-755A-42AA-8366-C8B39564DA37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D2A4C6C-755A-42AA-8366-C8B39564DA37}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8EE7EC39-5D2B-4208-9E90-AF398234DFCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EE7EC39-5D2B-4208-9E90-AF398234DFCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EE7EC39-5D2B-4208-9E90-AF398234DFCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EE7EC39-5D2B-4208-9E90-AF398234DFCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
