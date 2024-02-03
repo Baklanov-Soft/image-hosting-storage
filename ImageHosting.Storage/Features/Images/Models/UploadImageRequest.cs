@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace ImageHosting.Storage.Features.Images.Models;
 
-public class UploadImageDto
+public class UploadImageRequest
 {
     [Required] public IFormFile Image { get; init; } = null!;
 }

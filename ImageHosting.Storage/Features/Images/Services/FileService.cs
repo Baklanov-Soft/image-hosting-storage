@@ -22,11 +22,11 @@ public class FileService(IMinioClient minioClient) : IFileService
 
         var statObjectArgs = new StatObjectArgs()
             .WithBucket(writeFile.UserId)
-            .WithObject(writeFile.File.FileName);
+            .WithObject(writeFile.ImageId);
         var objectStat = await minioClient.StatObjectAsync(statObjectArgs, cancellationToken).ConfigureAwait(false);
         if (objectStat.Size > 0)
         {
-            throw new ImageObjectAlreadyExists(writeFile.UserId, writeFile.File.FileName);
+            throw new ImageObjectAlreadyExists(writeFile.UserId, writeFile.ImageId);
         }
 
         var stream = writeFile.File.OpenReadStream();
@@ -38,7 +38,7 @@ public class FileService(IMinioClient minioClient) : IFileService
                 .WithObjectSize(writeFile.File.Length)
                 .WithContentType(writeFile.File.ContentType)
                 .WithStreamData(stream)
-                .WithObject(writeFile.File.FileName);
+                .WithObject(writeFile.ImageId);
 
             var putObjectResponse =
                 await minioClient.PutObjectAsync(putObjectArgs, cancellationToken).ConfigureAwait(false);
@@ -52,7 +52,7 @@ public class FileService(IMinioClient minioClient) : IFileService
         //todo: check bucket
         var removeObjectArgs = new RemoveObjectArgs()
             .WithBucket(file.UserId)
-            .WithObject(file.ImageName);
+            .WithObject(file.ImageId);
         return minioClient.RemoveObjectAsync(removeObjectArgs, cancellationToken);
     }
 }

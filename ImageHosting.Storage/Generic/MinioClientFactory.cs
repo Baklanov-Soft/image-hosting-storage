@@ -7,7 +7,7 @@ public class MinioClientFactory(IOptions<MinioOptions> options) : IMinioClientFa
 {
     private readonly MinioOptions _options = options.Value;
 
-    public IMinioClient CreateInstance()
+    public IMinioClient CreateClient()
     {
         return new MinioClient()
             .WithEndpoint(_options.Endpoint)

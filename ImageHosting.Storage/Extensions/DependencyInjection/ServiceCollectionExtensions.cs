@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
             .ValidateDataAnnotations();
 
         services.TryAddSingleton<IMinioClientFactory, MinioClientFactory>();
-        services.TryAddSingleton(sp => sp.GetRequiredService<IMinioClientFactory>().CreateInstance());
+        services.TryAddSingleton(sp => sp.GetRequiredService<IMinioClientFactory>().CreateClient());
 
         return services;
     }

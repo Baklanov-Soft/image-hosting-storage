@@ -13,8 +13,7 @@ public interface IMetadataService
     /// <param name="imageMetadata">Metadata to write.</param>
     /// <param name="cancellationToken">A <see cref="System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
     /// <returns>Created entity.</returns>
-    /// <exception cref="ImageHosting.Storage.Features.Images.Exceptions.ImageMetadataAlreadyExistsException">Metadata with same name already exists.</exception>
-    Task<ReadImageDto> WriteMetadataAsync(ImageMetadata imageMetadata, CancellationToken cancellationToken = default);
+    Task<ReadImageResponse> WriteMetadataAsync(ImageMetadata imageMetadata, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Delete metadata.

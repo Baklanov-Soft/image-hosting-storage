@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace ImageHosting.Storage.Features.Images.Services;
 
-public class FileUploadCommand(IFileService fileService, string userId, IFormFile file) : IRollbackCommand
+public class FileUploadCommand(IFileService fileService, string userId, string imageId, IFormFile file) : IRollbackCommand
 {
     public Task ExecuteAsync(CancellationToken cancellationToken = default) =>
-        fileService.WriteFileAsync(new WriteFile(userId, file), cancellationToken);
+        fileService.WriteFileAsync(new WriteFile(userId, imageId, file), cancellationToken);
 
     public Task RollbackAsync(CancellationToken cancellationToken = default) =>
-        fileService.RemoveFileAsync(new RemoveFile(userId, file.FileName), cancellationToken);
+        fileService.RemoveFileAsync(new RemoveFile(userId, imageId), cancellationToken);
 }

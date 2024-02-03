@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ImageHosting.Storage.Features.Images.Models;
@@ -9,18 +8,17 @@ namespace ImageHosting.Storage.Features.Images.Services;
 
 public class MetadataUploadCommand(
     IMetadataService metadataService,
-    Guid id,
     Guid userId,
+    Guid imageId,
     string objectName,
     bool hidden,
-    DateTime uploadedAt,
-    List<string> categories)
+    DateTime uploadedAt)
     : IRollbackCommand
 {
     public Task ExecuteAsync(CancellationToken cancellationToken = default) =>
-        metadataService.WriteMetadataAsync(new ImageMetadata(id, objectName, userId, uploadedAt, hidden, categories),
+        metadataService.WriteMetadataAsync(new ImageMetadata(imageId, objectName, userId, uploadedAt, hidden),
             cancellationToken);
 
     public Task RollbackAsync(CancellationToken cancellationToken = default) =>
-        metadataService.DeleteMetadataAsync(id, cancellationToken);
+        metadataService.DeleteMetadataAsync(imageId, cancellationToken);
 }
