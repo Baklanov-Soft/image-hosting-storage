@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ImageHosting.Storage.Features.Images.Models;
@@ -13,15 +12,12 @@ public class UploadFileService(
     IMetadataUploadCommandFactory metadataUploadCommandFactory)
     : IUploadFileService
 {
-    public async Task<ReadImageDto> UploadAsync(Guid id, string userId, IFormFile formFile, bool hidden,
-        DateTime uploadedAt, List<string> categories, CancellationToken cancellationToken = default)
+    public async Task<ReadImageResponse> UploadAsync(Guid userId, Guid imageId, IFormFile formFile, bool hidden,
+        DateTime uploadedAt, CancellationToken cancellationToken = default)
     {
-        var userGuid = Guid.ParseExact(userId, "D");
-
-        var fileUploadCommand = fileUploadCommandFactory.CreateInstance(userId, formFile);
+        var fileUploadCommand = fileUploadCommandFactory.CreateCommand(userId, imageId, formFile);
         var metadataUploadCommand =
-            metadataUploadCommandFactory.CreateInstance(id, userGuid, formFile.FileName, hidden, uploadedAt,
-                categories);
+            metadataUploadCommandFactory.CreateCommand(userId, imageId, formFile.FileName, hidden, uploadedAt);
 
         var commands = new RollbackCommands();
         commands.Add(fileUploadCommand);
@@ -29,6 +25,6 @@ public class UploadFileService(
 
         await commands.ExecuteAsync(cancellationToken).ConfigureAwait(false);
 
-        return new ReadImageDto(id, userGuid, formFile.FileName, hidden, uploadedAt, categories);
+        return new ReadImageResponse(imageId, userId, formFile.FileName, hidden, uploadedAt);
     }
 }

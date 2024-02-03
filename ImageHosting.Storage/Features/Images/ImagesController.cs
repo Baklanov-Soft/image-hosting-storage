@@ -15,19 +15,22 @@ namespace ImageHosting.Storage.Features.Images;
 public class ImagesController(IUploadFileService uploadFileService) : ControllerBase
 {
     [HttpPost]
-    [ProducesResponseType(typeof(ReadImageDto), StatusCodes.Status200OK, MediaTypeNames.Application.Json)]
-    [Consumes(typeof(UploadImageDto), MediaTypeNames.Multipart.FormData)]
-    public async Task<IActionResult> UploadAsync([FromForm] UploadImageDto uploadImageDto,
+    [ProducesResponseType(typeof(ReadImageResponse), StatusCodes.Status200OK, MediaTypeNames.Application.Json)]
+    [Consumes(typeof(UploadImageRequest), MediaTypeNames.Multipart.FormData)]
+    public async Task<IActionResult> UploadAsync([FromForm] UploadImageRequest request,
         CancellationToken cancellationToken)
     {
-        var id = Guid.NewGuid();
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? Guid.Empty.ToString();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) switch
+        {
+            { } id => Guid.ParseExact(id, "D"),
+            _ => Guid.Empty
+        };
+        var imageId = Guid.NewGuid();
         var uploadedAt = DateTime.UtcNow;
 
-        var uploadResponseDto =
-            await uploadFileService.UploadAsync(id, userId, uploadImageDto.Image, hidden: false, uploadedAt,
-                categories: [], cancellationToken);
+        var response = await uploadFileService.UploadAsync(userId, imageId, request.Image, hidden: false, uploadedAt,
+            cancellationToken);
 
-        return Ok(uploadResponseDto);
+        return Ok(response);
     }
 }

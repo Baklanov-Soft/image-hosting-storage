@@ -4,5 +4,5 @@ namespace ImageHosting.Storage.Generic;
 
 public interface IMinioClientFactory
 {
-    IMinioClient CreateInstance();
+    IMinioClient CreateClient();
 }

@@ -1,14 +1,12 @@
 using System;
-using System.Collections.Generic;
 using ImageHosting.Storage.Generic;
 
 namespace ImageHosting.Storage.Features.Images.Services;
 
 public class MetadataUploadCommandFactory(IMetadataService metadataService) : IMetadataUploadCommandFactory
 {
-    public IRollbackCommand CreateInstance(Guid id, Guid userId, string objectName, bool hidden, DateTime uploadedAt,
-        List<string> categories)
+    public IRollbackCommand CreateCommand(Guid imageId, Guid userId, string objectName, bool hidden, DateTime uploadedAt)
     {
-        return new MetadataUploadCommand(metadataService, id, userId, objectName, hidden, uploadedAt, categories);
+        return new MetadataUploadCommand(metadataService, imageId, userId, objectName, hidden, uploadedAt);
     }
 }
