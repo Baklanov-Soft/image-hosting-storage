@@ -9,7 +9,8 @@ namespace ImageHosting.Storage.Features.Images.Services;
 
 public class UploadFileService(
     IFileUploadCommandFactory fileUploadCommandFactory,
-    IMetadataUploadCommandFactory metadataUploadCommandFactory)
+    IMetadataUploadCommandFactory metadataUploadCommandFactory,
+    IPublishNewMessageCommandFactory publishNewMessageCommandFactory)
     : IUploadFileService
 {
     public async Task<ReadImageResponse> UploadAsync(Guid userId, Guid imageId, IFormFile formFile, bool hidden,
@@ -18,10 +19,12 @@ public class UploadFileService(
         var fileUploadCommand = fileUploadCommandFactory.CreateCommand(userId, imageId, formFile);
         var metadataUploadCommand =
             metadataUploadCommandFactory.CreateCommand(userId, imageId, formFile.FileName, hidden, uploadedAt);
+        var publishNewMessageCommand = publishNewMessageCommandFactory.CreateCommand(userId, imageId);
 
         var commands = new RollbackCommands();
         commands.Add(fileUploadCommand);
         commands.Add(metadataUploadCommand);
+        commands.Add(publishNewMessageCommand);
 
         await commands.ExecuteAsync(cancellationToken).ConfigureAwait(false);
 

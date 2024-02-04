@@ -2,7 +2,7 @@ using ImageHosting.Storage.Exceptions;
 using ImageHosting.Storage.Generic;
 using NSubstitute.ExceptionExtensions;
 
-namespace ImageHosting.Storage.UnitTests.Services;
+namespace ImageHosting.Storage.UnitTests.Generic;
 
 public class RollbackCommandsTests
 {

@@ -1,6 +1,7 @@
 using ImageHosting.Storage.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace ImageHosting.Storage.Extensions.DependencyInjection;
 
@@ -16,5 +17,12 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton(sp => sp.GetRequiredService<IMinioClientFactory>().CreateClient());
 
         return services;
+    }
+
+    public static OptionsBuilder<KafkaOptions> AddKafkaOptions(this IServiceCollection services)
+    {
+        return services.AddOptions<KafkaOptions>()
+            .BindConfiguration(KafkaOptions.SectionName)
+            .ValidateDataAnnotations();
     }
 }
