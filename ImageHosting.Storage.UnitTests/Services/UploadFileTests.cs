@@ -1,3 +1,5 @@
+using Confluent.Kafka;
+using ImageHosting.Storage.Exceptions;
 using ImageHosting.Storage.Features.Images.Exceptions;
 using ImageHosting.Storage.Features.Images.Models;
 using ImageHosting.Storage.Features.Images.Services;
@@ -18,14 +20,18 @@ public class UploadFileTests
         var uploadedAt = DateTime.Now;
         var fileService = Substitute.For<IFileService>();
         var metadataService = Substitute.For<IMetadataService>();
+        var newImageProducer = Substitute.For<INewImageProducer>();
         var fileUploadCommandFactory = new FileUploadCommandFactory(fileService);
         var metadataUploadCommandFactory = new MetadataUploadCommandFactory(metadataService);
-        var sut = new UploadFileService(fileUploadCommandFactory, metadataUploadCommandFactory);
+        var publishNewMessageCommandFactory = new PublishNewMessageCommandFactory(newImageProducer);
+        var sut = new UploadFileService(fileUploadCommandFactory, metadataUploadCommandFactory,
+            publishNewMessageCommandFactory);
 
         var image = await sut.UploadAsync(userId, imageId, formFile, hidden, uploadedAt);
 
         await fileService.ReceivedWithAnyArgs().WriteFileAsync(default!);
         await metadataService.ReceivedWithAnyArgs().WriteMetadataAsync(default!);
+        await newImageProducer.ReceivedWithAnyArgs().SendAsync(default!);
         image.Id.Should().Be(imageId);
         image.UserId.Should().Be(userId);
         image.ObjectName.Should().Be(formFile.FileName);
@@ -46,13 +52,18 @@ public class UploadFileTests
         var fileService = Substitute.For<IFileService>();
         fileService.WriteFileAsync(Arg.Any<WriteFile>())
             .ThrowsAsync(new ImageObjectAlreadyExists(userId.ToString(), formFile.FileName));
+        var newImageProducer = Substitute.For<INewImageProducer>();
+        var publishNewMessageCommandFactory = new PublishNewMessageCommandFactory(newImageProducer);
         var fileUploadCommandFactory = new FileUploadCommandFactory(fileService);
-        var sut = new UploadFileService(fileUploadCommandFactory, metadataUploadCommandFactory);
+        var sut = new UploadFileService(fileUploadCommandFactory, metadataUploadCommandFactory,
+            publishNewMessageCommandFactory);
 
         var act = () => sut.UploadAsync(userId, imageId, formFile, hidden, uploadedAt);
 
-        await act.Should().ThrowAsync<Exception>().WithInnerException(typeof(ImageObjectAlreadyExists));
+        await act.Should().ThrowAsync<RollbackCommandsException>().WithInnerException(typeof(ImageObjectAlreadyExists));
         await fileService.ReceivedWithAnyArgs().WriteFileAsync(default!);
+        await metadataService.DidNotReceiveWithAnyArgs().WriteMetadataAsync(default!);
+        await newImageProducer.DidNotReceiveWithAnyArgs().SendAsync(default!);
     }
 
     [Fact]
@@ -69,13 +80,46 @@ public class UploadFileTests
         var metadataUploadCommandFactory = new MetadataUploadCommandFactory(metadataService);
         var fileService = Substitute.For<IFileService>();
         var fileUploadCommandFactory = new FileUploadCommandFactory(fileService);
-        var sut = new UploadFileService(fileUploadCommandFactory, metadataUploadCommandFactory);
+        var newImageProducer = Substitute.For<INewImageProducer>();
+        var publishNewMessageCommandFactory = new PublishNewMessageCommandFactory(newImageProducer);
+        var sut = new UploadFileService(fileUploadCommandFactory, metadataUploadCommandFactory,
+            publishNewMessageCommandFactory);
 
         var act = () => sut.UploadAsync(userId, imageId, formFile, hidden, uploadedAt);
 
-        await act.Should().ThrowAsync<Exception>().WithInnerException(typeof(DbUpdateException));
+        await act.Should().ThrowAsync<RollbackCommandsException>().WithInnerException(typeof(DbUpdateException));
         await fileService.ReceivedWithAnyArgs().WriteFileAsync(default!);
         await metadataService.ReceivedWithAnyArgs().WriteMetadataAsync(default!);
+        await fileService.ReceivedWithAnyArgs().RemoveFileAsync(default!);
+        await newImageProducer.DidNotReceiveWithAnyArgs().SendAsync(default!);
+    }
+
+    [Fact]
+    public async Task Could_not_send_event()
+    {
+        var imageId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        var formFile = FileFixture.GetPlainTextFormFile();
+        const bool hidden = false;
+        var uploadedAt = DateTime.Now;
+        var metadataService = Substitute.For<IMetadataService>();
+        var metadataUploadCommandFactory = new MetadataUploadCommandFactory(metadataService);
+        var fileService = Substitute.For<IFileService>();
+        var fileUploadCommandFactory = new FileUploadCommandFactory(fileService);
+        var newImageProducer = Substitute.For<INewImageProducer>();
+        newImageProducer.SendAsync(Arg.Any<NewImage>())
+            .ThrowsAsync(new KafkaException(new Error(ErrorCode.NetworkException)));
+        var publishNewMessageCommandFactory = new PublishNewMessageCommandFactory(newImageProducer);
+        var sut = new UploadFileService(fileUploadCommandFactory, metadataUploadCommandFactory,
+            publishNewMessageCommandFactory);
+
+        var act = () => sut.UploadAsync(userId, imageId, formFile, hidden, uploadedAt);
+
+        await act.Should().ThrowAsync<RollbackCommandsException>().WithInnerException(typeof(KafkaException));
+        await fileService.ReceivedWithAnyArgs().WriteFileAsync(default!);
+        await metadataService.ReceivedWithAnyArgs().WriteMetadataAsync(default!);
+        await newImageProducer.ReceivedWithAnyArgs().SendAsync(default!);
+        await metadataService.ReceivedWithAnyArgs().DeleteMetadataAsync(default!);
         await fileService.ReceivedWithAnyArgs().RemoveFileAsync(default!);
     }
 }
