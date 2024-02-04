@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using ImageHosting.Storage.Features.Images.Models;
@@ -5,6 +6,19 @@ using ImageHosting.Storage.Generic;
 using Microsoft.AspNetCore.Http;
 
 namespace ImageHosting.Storage.Features.Images.Services;
+
+public interface IFileUploadCommandFactory
+{
+    IRollbackCommand CreateCommand(Guid userId, Guid imageId, IFormFile file);
+}
+
+public class FileUploadCommandFactory(IFileService fileService) : IFileUploadCommandFactory
+{
+    public IRollbackCommand CreateCommand(Guid userId, Guid imageId, IFormFile file)
+    {
+        return new FileUploadCommand(fileService, userId.ToString("D"), imageId.ToString("D"), file);
+    }
+}
 
 public class FileUploadCommand(IFileService fileService, string userId, string imageId, IFormFile file) : IRollbackCommand
 {

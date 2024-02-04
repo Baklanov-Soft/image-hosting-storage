@@ -6,8 +6,8 @@ public class MinioOptions
 {
     public const string SectionName = "Minio";
 
-    [Required(AllowEmptyStrings = false)] public string Endpoint { get; init; } = null!;
-    [Required(AllowEmptyStrings = false)] public string AccessKey { get; init; } = null!;
-    [Required(AllowEmptyStrings = false)] public string SecretKey { get; init; } = null!;
+    [Required(AllowEmptyStrings = false)] public required string Endpoint { get; init; }
+    [Required(AllowEmptyStrings = false)] public required string AccessKey { get; init; }
+    [Required(AllowEmptyStrings = false)] public required string SecretKey { get; init; }
     public bool Secure { get; init; }
 }
