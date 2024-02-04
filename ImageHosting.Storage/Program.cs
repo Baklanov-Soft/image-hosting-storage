@@ -19,6 +19,7 @@ builder.Services.AddImageServices();
 builder.Services.AddImageHostingDbContext("ImageHosting");
 ProblemDetailsExtensions.AddProblemDetails(builder.Services)
     .AddProblemDetailsConventions();
+builder.Services.AddKafkaOptions();
 
 var app = builder.Build();
 
