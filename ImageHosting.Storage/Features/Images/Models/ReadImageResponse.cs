@@ -5,13 +5,13 @@ using ImageHosting.Persistence.ValueTypes;
 namespace ImageHosting.Storage.Features.Images.Models;
 
 public class ReadImageResponse(
-    Guid id,
+    ImageId id,
     UserId userId,
     string objectName,
     bool hidden,
     DateTime uploadedAt)
 {
-    public Guid Id { get; } = id;
+    public ImageId Id { get; } = id;
     public UserId UserId { get; } = userId;
     public string ObjectName { get; } = objectName;
     public bool Hidden { get; } = hidden;

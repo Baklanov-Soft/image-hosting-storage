@@ -9,6 +9,7 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
     public void Configure(EntityTypeBuilder<Image> builder)
     {
         builder.HasKey(i => i.Id);
+        builder.Property(i => i.Id).HasConversion<ImageId.ValueConverter>();
         builder.Property(i => i.ObjectName).HasMaxLength(200);
         builder.Property(i => i.Hidden).HasDefaultValue(false);
         builder.HasIndex(i => i.Hidden);

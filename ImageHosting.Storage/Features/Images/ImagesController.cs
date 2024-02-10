@@ -26,7 +26,7 @@ public class ImagesController(IUploadFileService uploadFileService) : Controller
             { } id => UserId.ParseExact(id, "D"),
             _ => UserId.Empty
         };
-        var imageId = Guid.NewGuid();
+        var imageId = new ImageId(Guid.NewGuid());
         var uploadedAt = DateTime.UtcNow;
 
         var response = await uploadFileService.UploadAsync(userId, imageId, request.Image, hidden: false, uploadedAt,

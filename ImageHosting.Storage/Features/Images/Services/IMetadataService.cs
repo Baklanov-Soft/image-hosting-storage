@@ -1,6 +1,6 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Features.Images.Models;
 
 namespace ImageHosting.Storage.Features.Images.Services;
@@ -21,5 +21,5 @@ public interface IMetadataService
     /// <param name="id">The id of metadata to delete.</param>
     /// <param name="cancellationToken">A <see cref="System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
     /// <returns>True if successful deleted.</returns>
-    Task<bool> DeleteMetadataAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<bool> DeleteMetadataAsync(ImageId id, CancellationToken cancellationToken = default);
 }

@@ -1,10 +1,11 @@
+using ImageHosting.Persistence.Entities.Configuration;
 using ImageHosting.Persistence.ValueTypes;
 
 namespace ImageHosting.Persistence.Entities;
 
 public class Image 
 {
-    public Guid Id { get; set; }
+    public ImageId Id { get; set; }
 
     public UserId UserId { get; set; }
     

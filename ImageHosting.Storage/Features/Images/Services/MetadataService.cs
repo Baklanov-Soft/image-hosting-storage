@@ -1,8 +1,8 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ImageHosting.Persistence.DbContexts;
+using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Features.Images.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +20,7 @@ public class MetadataService(IImageHostingDbContext dbContext) : IMetadataServic
         return ReadImageResponse.From(entity);
     }
 
-    public async Task<bool> DeleteMetadataAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteMetadataAsync(ImageId id, CancellationToken cancellationToken = default)
     {
         var rowsAffected = await dbContext.Images
             .Where(i => i.Id == id)

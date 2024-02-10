@@ -14,7 +14,7 @@ public class UploadFileTests
     [Fact]
     public async Task Successfully_upload_file()
     {
-        var imageId = Guid.NewGuid();
+        var imageId = new ImageId(Guid.NewGuid());
         var userId = new UserId(Guid.NewGuid());
         var formFile = FileFixture.GetPlainTextFormFile();
         const bool hidden = false;
@@ -43,7 +43,7 @@ public class UploadFileTests
     [Fact]
     public async Task Upload_already_exists_file()
     {
-        var imageId = Guid.NewGuid();
+        var imageId = new ImageId(Guid.NewGuid());
         var userId = new UserId(Guid.NewGuid());
         var formFile = FileFixture.GetPlainTextFormFile();
         const bool hidden = false;
@@ -70,7 +70,7 @@ public class UploadFileTests
     [Fact]
     public async Task Write_already_exists_metadata()
     {
-        var imageId = Guid.NewGuid();
+        var imageId = new ImageId(Guid.NewGuid());
         var userId = new UserId(Guid.NewGuid());
         var formFile = FileFixture.GetPlainTextFormFile();
         const bool hidden = false;
@@ -98,7 +98,7 @@ public class UploadFileTests
     [Fact]
     public async Task Could_not_send_event()
     {
-        var imageId = Guid.NewGuid();
+        var imageId = new ImageId(Guid.NewGuid());
         var userId = new UserId(Guid.NewGuid());
         var formFile = FileFixture.GetPlainTextFormFile();
         const bool hidden = false;

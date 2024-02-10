@@ -9,6 +9,6 @@ namespace ImageHosting.Storage.Features.Images.Services;
 
 public interface IUploadFileService
 {
-    Task<ReadImageResponse> UploadAsync(UserId userId, Guid imageId, IFormFile formFile, bool hidden, DateTime uploadedAt,
+    Task<ReadImageResponse> UploadAsync(UserId userId, ImageId imageId, IFormFile formFile, bool hidden, DateTime uploadedAt,
         CancellationToken cancellationToken = default);
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Confluent.Kafka;
@@ -10,7 +9,7 @@ public class NewImage
 {
     [JsonPropertyName("bucketId")] public required UserId BucketId { get; init; }
 
-    [JsonPropertyName("imageId")] public required Guid ImageId { get; init; }
+    [JsonPropertyName("imageId")] public required ImageId ImageId { get; init; }
 
     public class Serializer : ISerializer<NewImage>
     {

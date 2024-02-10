@@ -12,7 +12,7 @@ public readonly record struct UserId(Guid Id)
     
     public static UserId ParseExact(string input, [StringSyntax("GuidFormat")] string format)
     {
-        var guid = Guid.ParseExact((ReadOnlySpan<char>)input, (ReadOnlySpan<char>)format);
+        var guid = Guid.ParseExact(input, format);
         return new UserId(guid);
     }
     

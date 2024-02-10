@@ -9,12 +9,12 @@ namespace ImageHosting.Storage.Features.Images.Services;
 
 public interface IMetadataUploadCommandFactory
 {
-    IRollbackCommand CreateCommand(UserId userId, Guid imageId, string objectName, bool hidden, DateTime uploadedAt);
+    IRollbackCommand CreateCommand(UserId userId, ImageId imageId, string objectName, bool hidden, DateTime uploadedAt);
 }
 
 public class MetadataUploadCommandFactory(IMetadataService metadataService) : IMetadataUploadCommandFactory
 {
-    public IRollbackCommand CreateCommand(UserId userId, Guid imageId, string objectName, bool hidden, DateTime uploadedAt)
+    public IRollbackCommand CreateCommand(UserId userId, ImageId imageId, string objectName, bool hidden, DateTime uploadedAt)
     {
         return new MetadataUploadCommand(metadataService, userId, imageId, objectName, hidden, uploadedAt);
     }
@@ -23,7 +23,7 @@ public class MetadataUploadCommandFactory(IMetadataService metadataService) : IM
 public class MetadataUploadCommand(
     IMetadataService metadataService,
     UserId userId,
-    Guid imageId,
+    ImageId imageId,
     string objectName,
     bool hidden,
     DateTime uploadedAt)

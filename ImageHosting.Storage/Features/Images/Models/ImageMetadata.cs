@@ -5,7 +5,7 @@ using ImageHosting.Persistence.ValueTypes;
 namespace ImageHosting.Storage.Features.Images.Models;
 
 public class ImageMetadata(
-    Guid id,
+    ImageId id,
     string objectName,
     UserId userId,
     DateTime uploadedAt,

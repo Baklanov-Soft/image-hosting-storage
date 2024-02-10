@@ -14,7 +14,7 @@ public class UploadFileService(
     IPublishNewMessageCommandFactory publishNewMessageCommandFactory)
     : IUploadFileService
 {
-    public async Task<ReadImageResponse> UploadAsync(UserId userId, Guid imageId, IFormFile formFile, bool hidden,
+    public async Task<ReadImageResponse> UploadAsync(UserId userId, ImageId imageId, IFormFile formFile, bool hidden,
         DateTime uploadedAt, CancellationToken cancellationToken = default)
     {
         var fileUploadCommand = fileUploadCommandFactory.CreateCommand(userId, imageId, formFile);
