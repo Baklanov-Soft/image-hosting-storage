@@ -5,6 +5,7 @@ using ImageHosting.Persistence.DbContexts;
 using ImageHosting.Persistence.Extensions.DependencyInjection;
 using ImageHosting.Storage.Extensions.DependencyInjection;
 using ImageHosting.Storage.Features.Images.Extensions;
+using ImageHosting.Storage.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,6 +22,7 @@ builder.Services.AddImageHostingDbContext("ImageHosting");
 ProblemDetailsExtensions.AddProblemDetails(builder.Services)
     .AddProblemDetailsConventions();
 builder.Services.AddKafkaOptions();
+builder.Services.AddInitializeUserBucket();
 
 var app = builder.Build();
 
@@ -39,4 +41,10 @@ using (var serviceScope = app.Services.CreateScope())
     var dbContext = serviceScope.ServiceProvider.GetRequiredService<IImageHostingDbContext>();
     dbContext.Migrate();
 }
+using (var serviceScope = app.Services.CreateScope())
+{
+    var initializeUserBucket = serviceScope.ServiceProvider.GetRequiredService<IInitializeUserBucket>();
+    await initializeUserBucket.CreateDefaultAsync();
+}
+
 app.Run();
