@@ -3,12 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ImageHosting.Persistence.DbContexts;
 
-public class ImageHostingDbContext : DbContext, IImageHostingDbContext
+public class ImageHostingDbContext(DbContextOptions<ImageHostingDbContext> options)
+    : DbContext(options), IImageHostingDbContext
 {
-    public ImageHostingDbContext(DbContextOptions<ImageHostingDbContext> options) : base(options)
-    {
-    }
-
     public DbSet<Image> Images => Set<Image>();
     public DbSet<ForbiddenCategory> ForbiddenCategories => Set<ForbiddenCategory>();
 
@@ -16,4 +13,6 @@ public class ImageHostingDbContext : DbContext, IImageHostingDbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ImageHostingDbContext).Assembly);
     }
+
+    public void Migrate() => Database.Migrate();
 }
