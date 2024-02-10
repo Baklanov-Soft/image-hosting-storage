@@ -25,4 +25,9 @@ public static class ServiceCollectionExtensions
             .BindConfiguration(KafkaOptions.SectionName)
             .ValidateDataAnnotations();
     }
+
+    public static IServiceCollection AddInitializeUserBucket(this IServiceCollection services)
+    {
+        return services.AddTransient<IInitializeUserBucket, InitializeUserBucket>();
+    }
 }
