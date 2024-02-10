@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Features.Images.Models;
 using ImageHosting.Storage.Generic;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +14,7 @@ public class UploadFileService(
     IPublishNewMessageCommandFactory publishNewMessageCommandFactory)
     : IUploadFileService
 {
-    public async Task<ReadImageResponse> UploadAsync(Guid userId, Guid imageId, IFormFile formFile, bool hidden,
+    public async Task<ReadImageResponse> UploadAsync(UserId userId, Guid imageId, IFormFile formFile, bool hidden,
         DateTime uploadedAt, CancellationToken cancellationToken = default)
     {
         var fileUploadCommand = fileUploadCommandFactory.CreateCommand(userId, imageId, formFile);

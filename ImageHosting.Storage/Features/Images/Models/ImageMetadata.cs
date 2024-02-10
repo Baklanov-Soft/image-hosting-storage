@@ -1,24 +1,23 @@
 using System;
 using ImageHosting.Persistence.Entities;
+using ImageHosting.Persistence.ValueTypes;
 
 namespace ImageHosting.Storage.Features.Images.Models;
 
 public class ImageMetadata(
     Guid id,
     string objectName,
-    Guid userId,
+    UserId userId,
     DateTime uploadedAt,
     bool hidden)
 {
-    public string ObjectName { get; } = objectName;
-
     internal Image ToEntity()
     {
         return new Image
         {
             Id = id,
             UserId = userId,
-            ObjectName = ObjectName,
+            ObjectName = objectName,
             UploadedAt = uploadedAt,
             Hidden = hidden
         };

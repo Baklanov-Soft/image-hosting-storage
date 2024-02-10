@@ -1,3 +1,4 @@
+using ImageHosting.Persistence.ValueTypes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,5 +13,6 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
         builder.Property(i => i.Hidden).HasDefaultValue(false);
         builder.HasIndex(i => i.Hidden);
         builder.Property(i => i.Categories).HasColumnType("varchar(200)[]");
+        builder.Property(i => i.UserId).HasConversion<UserId.ValueConverter>();
     }
 }

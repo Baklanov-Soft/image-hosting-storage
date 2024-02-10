@@ -3,6 +3,7 @@ using System.Net.Mime;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Features.Images.Models;
 using ImageHosting.Storage.Features.Images.Services;
 using Microsoft.AspNetCore.Http;
@@ -22,8 +23,8 @@ public class ImagesController(IUploadFileService uploadFileService) : Controller
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) switch
         {
-            { } id => Guid.ParseExact(id, "D"),
-            _ => Guid.Empty
+            { } id => UserId.ParseExact(id, "D"),
+            _ => UserId.Empty
         };
         var imageId = Guid.NewGuid();
         var uploadedAt = DateTime.UtcNow;
