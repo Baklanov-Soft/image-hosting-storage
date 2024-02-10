@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Features.Images.Models;
 using ImageHosting.Storage.Generic;
 
@@ -8,21 +9,21 @@ namespace ImageHosting.Storage.Features.Images.Services;
 
 public interface IMetadataUploadCommandFactory
 {
-    IRollbackCommand CreateCommand(Guid userId, Guid imageId, string objectName, bool hidden, DateTime uploadedAt);
+    IRollbackCommand CreateCommand(UserId userId, ImageId imageId, string objectName, bool hidden, DateTime uploadedAt);
 }
 
 public class MetadataUploadCommandFactory(IMetadataService metadataService) : IMetadataUploadCommandFactory
 {
-    public IRollbackCommand CreateCommand(Guid imageId, Guid userId, string objectName, bool hidden, DateTime uploadedAt)
+    public IRollbackCommand CreateCommand(UserId userId, ImageId imageId, string objectName, bool hidden, DateTime uploadedAt)
     {
-        return new MetadataUploadCommand(metadataService, imageId, userId, objectName, hidden, uploadedAt);
+        return new MetadataUploadCommand(metadataService, userId, imageId, objectName, hidden, uploadedAt);
     }
 }
 
 public class MetadataUploadCommand(
     IMetadataService metadataService,
-    Guid userId,
-    Guid imageId,
+    UserId userId,
+    ImageId imageId,
     string objectName,
     bool hidden,
     DateTime uploadedAt)

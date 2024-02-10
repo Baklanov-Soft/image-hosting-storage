@@ -11,5 +11,6 @@ public interface IImageHostingDbContext
     /// <inheritdoc cref="DbContext"/>
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
+    /// <inheritdoc cref="RelationalDatabaseFacadeExtensions.Migrate"/>
     void Migrate();
 }

@@ -1,4 +1,5 @@
 using Confluent.Kafka;
+using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Exceptions;
 using ImageHosting.Storage.Features.Images.Exceptions;
 using ImageHosting.Storage.Features.Images.Models;
@@ -13,8 +14,8 @@ public class UploadFileTests
     [Fact]
     public async Task Successfully_upload_file()
     {
-        var imageId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
+        var imageId = new ImageId(Guid.NewGuid());
+        var userId = new UserId(Guid.NewGuid());
         var formFile = FileFixture.GetPlainTextFormFile();
         const bool hidden = false;
         var uploadedAt = DateTime.Now;
@@ -42,8 +43,8 @@ public class UploadFileTests
     [Fact]
     public async Task Upload_already_exists_file()
     {
-        var imageId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
+        var imageId = new ImageId(Guid.NewGuid());
+        var userId = new UserId(Guid.NewGuid());
         var formFile = FileFixture.GetPlainTextFormFile();
         const bool hidden = false;
         var uploadedAt = DateTime.Now;
@@ -69,8 +70,8 @@ public class UploadFileTests
     [Fact]
     public async Task Write_already_exists_metadata()
     {
-        var imageId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
+        var imageId = new ImageId(Guid.NewGuid());
+        var userId = new UserId(Guid.NewGuid());
         var formFile = FileFixture.GetPlainTextFormFile();
         const bool hidden = false;
         var uploadedAt = DateTime.Now;
@@ -97,8 +98,8 @@ public class UploadFileTests
     [Fact]
     public async Task Could_not_send_event()
     {
-        var imageId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
+        var imageId = new ImageId(Guid.NewGuid());
+        var userId = new UserId(Guid.NewGuid());
         var formFile = FileFixture.GetPlainTextFormFile();
         const bool hidden = false;
         var uploadedAt = DateTime.Now;

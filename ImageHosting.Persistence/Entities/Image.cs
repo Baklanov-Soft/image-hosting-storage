@@ -1,10 +1,15 @@
+using ImageHosting.Persistence.Entities.Configuration;
+using ImageHosting.Persistence.ValueTypes;
+using Microsoft.EntityFrameworkCore;
+
 namespace ImageHosting.Persistence.Entities;
 
+[EntityTypeConfiguration(typeof(ImageConfiguration))]
 public class Image 
 {
-    public Guid Id { get; set; }
+    public ImageId Id { get; set; }
 
-    public Guid UserId { get; set; }
+    public UserId UserId { get; set; }
     
     public string ObjectName { get; set; } = null!;
     public bool Hidden { get; set; }

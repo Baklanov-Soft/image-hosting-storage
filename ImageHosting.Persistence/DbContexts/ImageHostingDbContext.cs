@@ -9,10 +9,5 @@ public class ImageHostingDbContext(DbContextOptions<ImageHostingDbContext> optio
     public DbSet<Image> Images => Set<Image>();
     public DbSet<ForbiddenCategory> ForbiddenCategories => Set<ForbiddenCategory>();
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ImageHostingDbContext).Assembly);
-    }
-
     public void Migrate() => Database.Migrate();
 }
