@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Hellang.Middleware.ProblemDetails;
 using Hellang.Middleware.ProblemDetails.Mvc;
+using ImageHosting.Persistence.DbContexts;
 using ImageHosting.Persistence.Extensions.DependencyInjection;
 using ImageHosting.Storage.Extensions.DependencyInjection;
 using ImageHosting.Storage.Features.Images.Extensions;
@@ -33,4 +34,9 @@ if (app.Environment.IsDevelopment())
 
 app.MapControllers();
 
+using (var serviceScope = app.Services.CreateScope())
+{
+    var dbContext = serviceScope.ServiceProvider.GetRequiredService<IImageHostingDbContext>();
+    dbContext.Migrate();
+}
 app.Run();
