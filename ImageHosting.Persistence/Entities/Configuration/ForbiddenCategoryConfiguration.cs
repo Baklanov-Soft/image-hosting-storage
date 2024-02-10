@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ImageHosting.Persistence.Entities.Configuration;
 
-public class ForbiddenCategoryConfiguration:IEntityTypeConfiguration<ForbiddenCategory>
+public class ForbiddenCategoryConfiguration : IEntityTypeConfiguration<ForbiddenCategory>
 {
     public void Configure(EntityTypeBuilder<ForbiddenCategory> builder)
     {

@@ -1,8 +1,10 @@
 using ImageHosting.Persistence.Entities.Configuration;
 using ImageHosting.Persistence.ValueTypes;
+using Microsoft.EntityFrameworkCore;
 
 namespace ImageHosting.Persistence.Entities;
 
+[EntityTypeConfiguration(typeof(ImageConfiguration))]
 public class Image 
 {
     public ImageId Id { get; set; }
