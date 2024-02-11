@@ -47,12 +47,19 @@ public class FileService(IMinioClient minioClient) : IFileService
         }
     }
 
-    public Task RemoveFileAsync(RemoveFile file, CancellationToken cancellationToken = default)
+    public async Task RemoveFileAsync(RemoveFile removeFile, CancellationToken cancellationToken = default)
     {
-        //todo: check bucket
+        var bucketExistsArgs = new BucketExistsArgs().WithBucket(removeFile.UserId);
+        var foundBucket =
+            await minioClient.BucketExistsAsync(bucketExistsArgs, cancellationToken).ConfigureAwait(false);
+        if (!foundBucket)
+        {
+            throw new UserBucketDoesNotExistsException(removeFile.UserId);
+        }
+        
         var removeObjectArgs = new RemoveObjectArgs()
-            .WithBucket(file.UserId)
-            .WithObject(file.ImageId);
-        return minioClient.RemoveObjectAsync(removeObjectArgs, cancellationToken);
+            .WithBucket(removeFile.UserId)
+            .WithObject(removeFile.ImageId);
+        await minioClient.RemoveObjectAsync(removeObjectArgs, cancellationToken).ConfigureAwait(false);
     }
 }
