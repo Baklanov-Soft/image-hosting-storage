@@ -44,7 +44,7 @@ public class RollbackCommands
             i--;
             while (i >= 0)
             {
-                await _commands[i].RollbackAsync(cancellationToken);
+                await _commands[i].RollbackAsync();
                 i--;
             }
 
