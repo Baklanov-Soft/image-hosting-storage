@@ -8,7 +8,7 @@ namespace ImageHosting.Persistence.ValueTypes;
 [JsonConverter(typeof(JsonConverter))]
 public readonly record struct ImageId(Guid Id)
 {
-    public static ImageId ParseExact(string input, [StringSyntax("GuidFormat")] string format)
+    private static ImageId ParseExact(string input, [StringSyntax("GuidFormat")] string format)
     {
         var guid = Guid.ParseExact(input, format);
         return new ImageId(guid);
@@ -17,6 +17,11 @@ public readonly record struct ImageId(Guid Id)
     public string ToString([StringSyntax("GuidFormat")] string? format)
     {
         return Id.ToString(format);
+    }
+    
+    public override string ToString()
+    {
+        return ToString("D");
     }
 
     public class ValueConverter() : ValueConverter<ImageId, Guid>(userId => userId.Id, guid => new ImageId(guid));

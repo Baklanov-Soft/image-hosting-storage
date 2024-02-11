@@ -15,10 +15,15 @@ public readonly record struct UserId(Guid Id)
         var guid = Guid.ParseExact(input, format);
         return new UserId(guid);
     }
-    
+
     public string ToString([StringSyntax("GuidFormat")] string? format)
     {
         return Id.ToString(format);
+    }
+
+    public override string ToString()
+    {
+        return ToString("D");
     }
 
     public class ValueConverter() : ValueConverter<UserId, Guid>(userId => userId.Id, guid => new UserId(guid));

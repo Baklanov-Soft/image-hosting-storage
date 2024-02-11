@@ -13,12 +13,12 @@ namespace ImageHosting.Storage.Features.Images;
 
 [ApiController]
 [Route("[controller]")]
-public class ImagesController(IUploadFileService uploadFileService) : ControllerBase
+public class ImagesController(IUploadFileHandler uploadFileHandler, IGetImageHandler getImageHandler) : ControllerBase
 {
     [HttpPost]
-    [ProducesResponseType(typeof(ReadImageResponse), StatusCodes.Status200OK, MediaTypeNames.Application.Json)]
+    [ProducesResponseType(typeof(ImageUploadedResponse), StatusCodes.Status201Created, MediaTypeNames.Application.Json)]
     [Consumes(typeof(UploadImageRequest), MediaTypeNames.Multipart.FormData)]
-    public async Task<IActionResult> UploadAsync([FromForm] UploadImageRequest request,
+    public async Task<IActionResult> Upload([FromForm] UploadImageRequest request,
         CancellationToken cancellationToken)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) switch
@@ -29,9 +29,18 @@ public class ImagesController(IUploadFileService uploadFileService) : Controller
         var imageId = new ImageId(Guid.NewGuid());
         var uploadedAt = DateTime.UtcNow;
 
-        var response = await uploadFileService.UploadAsync(userId, imageId, request.Image, hidden: false, uploadedAt,
+        var response = await uploadFileHandler.UploadAsync(userId, imageId, request.Image, hidden: false, uploadedAt,
             cancellationToken);
 
-        return Ok(response);
+        return CreatedAtAction(nameof(Get), new { response.Id }, response);
+    }
+
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(ReadImage), StatusCodes.Status200OK, MediaTypeNames.Application.Json)]
+    public async Task<IActionResult> Get([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var imageId = new ImageId(id);
+        var image = await getImageHandler.GetAsync(imageId, cancellationToken);
+        return Ok(image);
     }
 }

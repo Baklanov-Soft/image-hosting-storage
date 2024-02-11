@@ -8,13 +8,19 @@ using Microsoft.AspNetCore.Http;
 
 namespace ImageHosting.Storage.Features.Images.Services;
 
-public class UploadFileService(
+public interface IUploadFileHandler
+{
+    Task<ImageUploadedResponse> UploadAsync(UserId userId, ImageId imageId, IFormFile formFile, bool hidden, DateTime uploadedAt,
+        CancellationToken cancellationToken = default);
+}
+
+public class UploadFileHandler(
     IFileUploadCommandFactory fileUploadCommandFactory,
     IMetadataUploadCommandFactory metadataUploadCommandFactory,
     IPublishNewMessageCommandFactory publishNewMessageCommandFactory)
-    : IUploadFileService
+    : IUploadFileHandler
 {
-    public async Task<ReadImageResponse> UploadAsync(UserId userId, ImageId imageId, IFormFile formFile, bool hidden,
+    public async Task<ImageUploadedResponse> UploadAsync(UserId userId, ImageId imageId, IFormFile formFile, bool hidden,
         DateTime uploadedAt, CancellationToken cancellationToken = default)
     {
         var fileUploadCommand = fileUploadCommandFactory.CreateCommand(userId, imageId, formFile);
@@ -29,6 +35,6 @@ public class UploadFileService(
 
         await commands.ExecuteAsync(cancellationToken).ConfigureAwait(false);
 
-        return new ReadImageResponse(imageId, userId, formFile.FileName, hidden, uploadedAt);
+        return new ImageUploadedResponse(imageId, userId, formFile.FileName, hidden, uploadedAt);
     }
 }
