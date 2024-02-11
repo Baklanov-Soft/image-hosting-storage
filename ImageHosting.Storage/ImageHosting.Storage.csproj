@@ -25,4 +25,8 @@
       <ProjectReference Include="..\ImageHosting.Persistence\ImageHosting.Persistence.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Features\Identity\" />
+    </ItemGroup>
+
 </Project>

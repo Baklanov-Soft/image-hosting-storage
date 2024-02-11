@@ -7,6 +7,7 @@ using ImageHosting.Storage.Extensions.DependencyInjection;
 using ImageHosting.Storage.Features.Images.Extensions;
 using ImageHosting.Storage.Generic;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -23,6 +24,9 @@ ProblemDetailsExtensions.AddProblemDetails(builder.Services)
     .AddProblemDetailsConventions();
 builder.Services.AddKafkaOptions();
 builder.Services.AddInitializeUserBucket();
+builder.Services.AddAuthentication();
+builder.Services.AddIdentityCore<IdentityUser>()
+    .AddEntityFrameworkStores<ImageHostingDbContext>();
 
 var app = builder.Build();
 
@@ -33,6 +37,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseAuthentication();
 
 app.MapControllers();
 
