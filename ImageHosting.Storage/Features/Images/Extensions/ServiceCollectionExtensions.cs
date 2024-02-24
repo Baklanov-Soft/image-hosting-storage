@@ -1,3 +1,4 @@
+using ImageHosting.Storage.Features.Images.Handlers;
 using ImageHosting.Storage.Features.Images.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,12 +8,13 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddImageServices(this IServiceCollection services)
     {
+        services.AddSingleton<INewImageProducer, NewImageProducer>();
+        
         return services
             .AddTransient<IFileService, FileService>()
             .AddTransient<IFileUploadCommandFactory, FileUploadCommandFactory>()
             .AddTransient<IMetadataService, MetadataService>()
             .AddTransient<IMetadataUploadCommandFactory, MetadataUploadCommandFactory>()
-            .AddTransient<INewImageProducer, NewImageProducer>()
             .AddTransient<IPublishNewMessageCommandFactory, PublishNewMessageCommandFactory>()
             .AddTransient<IUploadFileService, UploadFileService>();
     }
