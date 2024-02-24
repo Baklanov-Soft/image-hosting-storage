@@ -3,19 +3,34 @@ using Hellang.Middleware.ProblemDetails;
 using Hellang.Middleware.ProblemDetails.Mvc;
 using ImageHosting.Persistence.DbContexts;
 using ImageHosting.Persistence.Extensions.DependencyInjection;
+using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Extensions.DependencyInjection;
+using ImageHosting.Storage.Features.Images.Endpoints;
 using ImageHosting.Storage.Features.Images.Extensions;
 using ImageHosting.Storage.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
     .AddJsonOptions(x => x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.MapType<UserId>(() => new OpenApiSchema
+    {
+        Type = "string",
+        Format = "uuid"
+    });
+    options.MapType<ImageId>(() => new OpenApiSchema
+    {
+        Type = "string",
+        Format = "uuid"
+    });
+});
 builder.Services.AddMinio();
 builder.Services.AddImageServices();
 builder.Services.AddImageHostingDbContext("ImageHosting");
@@ -34,13 +49,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapControllers();
+app.MapImagesEndpoints();
 
 using (var serviceScope = app.Services.CreateScope())
 {
     var dbContext = serviceScope.ServiceProvider.GetRequiredService<IImageHostingDbContext>();
     dbContext.Migrate();
 }
+
 using (var serviceScope = app.Services.CreateScope())
 {
     var initializeUserBucket = serviceScope.ServiceProvider.GetRequiredService<IInitializeUserBucket>();
