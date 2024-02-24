@@ -16,6 +16,6 @@ public static class ServiceCollectionExtensions
             .AddTransient<IMetadataService, MetadataService>()
             .AddTransient<IMetadataUploadCommandFactory, MetadataUploadCommandFactory>()
             .AddTransient<IPublishNewMessageCommandFactory, PublishNewMessageCommandFactory>()
-            .AddTransient<IUploadFileService, UploadFileService>();
+            .AddTransient<IUploadFileHandler, UploadFileHandler>();
     }
 }

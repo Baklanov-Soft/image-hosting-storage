@@ -2,6 +2,7 @@ using Confluent.Kafka;
 using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Exceptions;
 using ImageHosting.Storage.Features.Images.Exceptions;
+using ImageHosting.Storage.Features.Images.Handlers;
 using ImageHosting.Storage.Features.Images.Models;
 using ImageHosting.Storage.Features.Images.Services;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,7 @@ public class UploadFileTests
         var fileUploadCommandFactory = new FileUploadCommandFactory(fileService);
         var metadataUploadCommandFactory = new MetadataUploadCommandFactory(metadataService);
         var publishNewMessageCommandFactory = new PublishNewMessageCommandFactory(newImageProducer);
-        var sut = new UploadFileService(fileUploadCommandFactory, metadataUploadCommandFactory,
+        var sut = new UploadFileHandler(fileUploadCommandFactory, metadataUploadCommandFactory,
             publishNewMessageCommandFactory);
 
         var image = await sut.UploadAsync(userId, imageId, formFile, hidden, uploadedAt);
@@ -56,7 +57,7 @@ public class UploadFileTests
         var newImageProducer = Substitute.For<INewImageProducer>();
         var publishNewMessageCommandFactory = new PublishNewMessageCommandFactory(newImageProducer);
         var fileUploadCommandFactory = new FileUploadCommandFactory(fileService);
-        var sut = new UploadFileService(fileUploadCommandFactory, metadataUploadCommandFactory,
+        var sut = new UploadFileHandler(fileUploadCommandFactory, metadataUploadCommandFactory,
             publishNewMessageCommandFactory);
 
         var act = () => sut.UploadAsync(userId, imageId, formFile, hidden, uploadedAt);
@@ -83,7 +84,7 @@ public class UploadFileTests
         var fileUploadCommandFactory = new FileUploadCommandFactory(fileService);
         var newImageProducer = Substitute.For<INewImageProducer>();
         var publishNewMessageCommandFactory = new PublishNewMessageCommandFactory(newImageProducer);
-        var sut = new UploadFileService(fileUploadCommandFactory, metadataUploadCommandFactory,
+        var sut = new UploadFileHandler(fileUploadCommandFactory, metadataUploadCommandFactory,
             publishNewMessageCommandFactory);
 
         var act = () => sut.UploadAsync(userId, imageId, formFile, hidden, uploadedAt);
@@ -111,7 +112,7 @@ public class UploadFileTests
         newImageProducer.SendAsync(Arg.Any<NewImage>())
             .ThrowsAsync(new KafkaException(new Error(ErrorCode.NetworkException)));
         var publishNewMessageCommandFactory = new PublishNewMessageCommandFactory(newImageProducer);
-        var sut = new UploadFileService(fileUploadCommandFactory, metadataUploadCommandFactory,
+        var sut = new UploadFileHandler(fileUploadCommandFactory, metadataUploadCommandFactory,
             publishNewMessageCommandFactory);
 
         var act = () => sut.UploadAsync(userId, imageId, formFile, hidden, uploadedAt);
