@@ -4,7 +4,7 @@ using ImageHosting.Persistence.ValueTypes;
 
 namespace ImageHosting.Storage.Features.Images.Models;
 
-public class ReadImageResponse(
+public class ImageUploadedResponse(
     ImageId id,
     UserId userId,
     string objectName,
@@ -17,8 +17,8 @@ public class ReadImageResponse(
     public bool Hidden { get; } = hidden;
     public DateTime UploadedAt { get; } = uploadedAt;
 
-    public static ReadImageResponse From(Image image)
+    public static ImageUploadedResponse From(Image image)
     {
-        return new ReadImageResponse(image.Id, image.UserId, image.ObjectName, image.Hidden, image.UploadedAt);
+        return new ImageUploadedResponse(image.Id, image.UserId, image.ObjectName, image.Hidden, image.UploadedAt);
     }
 }

@@ -10,14 +10,14 @@ namespace ImageHosting.Storage.Features.Images.Services;
 
 public class MetadataService(IImageHostingDbContext dbContext) : IMetadataService
 {
-    public async Task<ReadImageResponse> WriteMetadataAsync(ImageMetadata imageMetadata,
+    public async Task<ImageUploadedResponse> WriteMetadataAsync(ImageMetadata imageMetadata,
         CancellationToken cancellationToken = default)
     {
         var entity = imageMetadata.ToEntity();
         dbContext.Images.Add(entity);
         await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-        return ReadImageResponse.From(entity);
+        return ImageUploadedResponse.From(entity);
     }
 
     public async Task<bool> DeleteMetadataAsync(ImageId id, CancellationToken cancellationToken = default)
