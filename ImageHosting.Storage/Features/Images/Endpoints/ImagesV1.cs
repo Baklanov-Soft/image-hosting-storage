@@ -10,13 +10,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ImageHosting.Storage.Features.Images.Endpoints;
 
-public static class Images
+public static class ImagesV1
 {
-    public static void MapImagesEndpoints(this IEndpointRouteBuilder routes)
+    public static RouteHandlerBuilder MapImagesV1Endpoints(this IEndpointRouteBuilder routes)
     {
-        var images = routes.MapGroup("/images");
-
-        images.MapPost(pattern: "", handler: async ([FromForm] IFormFile file,
+        return routes.MapGroup("/images")
+            .MapPost(pattern: "", handler: async ([FromForm] IFormFile file,
                 [FromServices] IUploadFileHandler uploadFileHandler, ClaimsPrincipal user,
                 CancellationToken cancellationToken) =>
             {
@@ -28,12 +27,13 @@ public static class Images
                 var imageId = new ImageId(Guid.NewGuid());
                 var uploadedAt = DateTime.UtcNow;
 
-                var response = await uploadFileHandler.UploadAsync(userId, imageId, file, hidden: false, uploadedAt,
-                    cancellationToken);
+                var response = await uploadFileHandler.UploadAsync(userId, imageId, file, hidden: false,
+                    uploadedAt, cancellationToken);
 
                 return TypedResults.Ok(response);
             })
             .DisableAntiforgery()
-            .WithName("PostImage");
+            .WithName("PostImage")
+            .MapToApiVersion(1);
     }
 }

@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Asp.Versioning;
 using Hellang.Middleware.ProblemDetails;
 using Hellang.Middleware.ProblemDetails.Mvc;
 using ImageHosting.Persistence.DbContexts;
@@ -38,6 +39,12 @@ ProblemDetailsExtensions.AddProblemDetails(builder.Services)
     .AddProblemDetailsConventions();
 builder.Services.AddKafkaOptions();
 builder.Services.AddInitializeUserBucket();
+builder.Services.AddApiVersioning()
+    .AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'V";
+        options.SubstituteApiVersionInUrl = true;
+    });
 
 var app = builder.Build();
 
@@ -49,7 +56,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapImagesEndpoints();
+var apiVersionSet = app.NewApiVersionSet()
+    .HasApiVersion(new ApiVersion(1))
+    .Build();
+
+app.MapGroup("/api/v{v:apiVersion}")
+    .WithApiVersionSet(apiVersionSet)
+    .MapImagesV1Endpoints();
 
 using (var serviceScope = app.Services.CreateScope())
 {
