@@ -9,6 +9,7 @@ using ImageHosting.Storage.Extensions.DependencyInjection;
 using ImageHosting.Storage.Features.Images.Endpoints;
 using ImageHosting.Storage.Features.Images.Extensions;
 using ImageHosting.Storage.Generic;
+using ImageHosting.Storage.OpenApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -45,24 +46,34 @@ builder.Services.AddApiVersioning()
         options.GroupNameFormat = "'v'V";
         options.SubstituteApiVersionInUrl = true;
     });
+builder.Services.ConfigureOptions<NamedSwaggerGenOptions>();
 
 var app = builder.Build();
 
 app.UseProblemDetails();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 var apiVersionSet = app.NewApiVersionSet()
     .HasApiVersion(new ApiVersion(1))
     .Build();
 
-app.MapGroup("/api/v{v:apiVersion}")
+app.MapGroup("api/v{v:apiVersion}")
     .WithApiVersionSet(apiVersionSet)
-    .MapImagesV1Endpoints();
+    .MapImagesEndpoints();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        foreach (var description in app.DescribeApiVersions())
+        {
+            var url = $"/swagger/{description.GroupName}/swagger.json";
+            var name = description.GroupName.ToUpperInvariant();
+
+            options.SwaggerEndpoint(url, name);
+        }
+    });
+}
 
 using (var serviceScope = app.Services.CreateScope())
 {
