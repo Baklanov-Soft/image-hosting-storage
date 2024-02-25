@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading;
 using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Features.Images.Handlers;
+using ImageHosting.Storage.Features.Images.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,16 @@ public static class Images
             })
             .DisableAntiforgery()
             .WithName("PostImage")
+            .MapToApiVersion(1);
+
+        images.MapGet(pattern: "{id:guid}/asset", handler: async ([FromRoute] Guid id, [FromQuery] SizeParam? size,
+                [FromServices] IGetImageAssetHandler getImageAssetHandler, CancellationToken cancellationToken) =>
+            {
+                var stream = await getImageAssetHandler.GetImageAsync(id, cancellationToken);
+
+                return TypedResults.File(stream);
+            })
+            .WithName("GetImageAsset")
             .MapToApiVersion(1);
 
         return images;

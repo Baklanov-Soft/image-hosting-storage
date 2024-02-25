@@ -8,6 +8,7 @@ using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Extensions.DependencyInjection;
 using ImageHosting.Storage.Features.Images.Endpoints;
 using ImageHosting.Storage.Features.Images.Extensions;
+using ImageHosting.Storage.Features.Images.Models;
 using ImageHosting.Storage.Generic;
 using ImageHosting.Storage.OpenApi;
 using Microsoft.AspNetCore.Builder;
@@ -31,6 +32,11 @@ builder.Services.AddSwaggerGen(options =>
     {
         Type = "string",
         Format = "uuid"
+    });
+    options.MapType<SizeParam>(() => new OpenApiSchema
+    {
+        Type = "integer",
+        Format = "int32"
     });
 });
 builder.Services.AddMinio();
