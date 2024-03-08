@@ -33,11 +33,6 @@ builder.Services.AddSwaggerGen(options =>
         Type = "string",
         Format = "uuid"
     });
-    options.MapType<SizeParam>(() => new OpenApiSchema
-    {
-        Type = "integer",
-        Format = "int32"
-    });
 });
 builder.Services.AddMinio();
 builder.Services.AddImageServices();
