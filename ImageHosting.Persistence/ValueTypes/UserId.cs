@@ -15,7 +15,12 @@ public readonly record struct UserId(Guid Id)
         var guid = Guid.ParseExact(input, format);
         return new UserId(guid);
     }
-    
+
+    public override string ToString()
+    {
+        return ToString("D");
+    }
+
     public string ToString([StringSyntax("GuidFormat")] string? format)
     {
         return Id.ToString(format);

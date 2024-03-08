@@ -6,17 +6,44 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ImageHosting.Persistence.ValueTypes;
 
 [JsonConverter(typeof(JsonConverter))]
-public readonly record struct ImageId(Guid Id)
+public readonly record struct ImageId(Guid Id) : IParsable<ImageId>
 {
-    public static ImageId ParseExact(string input, [StringSyntax("GuidFormat")] string format)
+    private static ImageId ParseExact(string input, [StringSyntax("GuidFormat")] string format)
     {
         var guid = Guid.ParseExact(input, format);
         return new ImageId(guid);
     }
-    
+
+    public override string ToString()
+    {
+        return ToString("D");
+    }
+
     public string ToString([StringSyntax("GuidFormat")] string? format)
     {
         return Id.ToString(format);
+    }
+
+    public static ImageId Parse(string s, IFormatProvider? provider)
+    {
+        if (TryParse(s, provider, out var result))
+        {
+            return result;
+        }
+
+        throw new ArgumentException("Invalid value for image id param.", nameof(s));
+    }
+
+    public static bool TryParse(string? s, IFormatProvider? provider, out ImageId result)
+    {
+        if (s is not null)
+        {
+            result = ParseExact(s, "D");
+            return true;
+        }
+
+        result = default;
+        return false;
     }
 
     public class ValueConverter() : ValueConverter<ImageId, Guid>(userId => userId.Id, guid => new ImageId(guid));
