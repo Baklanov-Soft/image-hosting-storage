@@ -89,6 +89,19 @@
       "--topic", "new-images.v1"
     ]
   
+  resizer:
+    image: ghcr.io/baklanov-soft/image-hosting-processing-resizer:master
+    container_name: resizer
+    depends_on:
+      - kafka-init
+      - images-s3
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      CONSUMER_GROUP_ID: resizer-local-test
+      MINIO_HOST: "http://images-s3:9000"
+      MINIO_USER: minioadmin
+      MINIO_PASSWORD: minioadmin
+
   kafka-ui:
     image: provectuslabs/kafka-ui
     container_name: kafka-ui
