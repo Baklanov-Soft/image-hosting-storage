@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Asp.Versioning;
+using FluentValidation;
 using Hellang.Middleware.ProblemDetails;
 using Hellang.Middleware.ProblemDetails.Mvc;
 using ImageHosting.Persistence.DbContexts;
@@ -8,7 +9,6 @@ using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Extensions.DependencyInjection;
 using ImageHosting.Storage.Features.Images.Endpoints;
 using ImageHosting.Storage.Features.Images.Extensions;
-using ImageHosting.Storage.Features.Images.Models;
 using ImageHosting.Storage.Generic;
 using ImageHosting.Storage.OpenApi;
 using Microsoft.AspNetCore.Builder;
@@ -48,6 +48,7 @@ builder.Services.AddApiVersioning()
         options.SubstituteApiVersionInUrl = true;
     });
 builder.Services.ConfigureOptions<NamedSwaggerGenOptions>();
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(Program));
 
 var app = builder.Build();
 

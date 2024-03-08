@@ -4,6 +4,7 @@ using System.Threading;
 using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Features.Images.Handlers;
 using ImageHosting.Storage.Features.Images.Models;
+using ImageHosting.Storage.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -38,13 +39,20 @@ public static class Images
             .WithName("PostImage")
             .MapToApiVersion(1);
 
-        images.MapGet(pattern: "{id:guid}/asset", handler: async ([FromRoute] Guid id, [FromQuery] SizeParam? size,
-                [FromServices] IGetImageAssetHandler getImageAssetHandler, CancellationToken cancellationToken) =>
+        images.MapGet(pattern: "{id}/asset", handler: async ([AsParameters] GetImageAssetParams @params,
+                [FromServices] IGetImageAssetHandler getImageAssetHandler, ClaimsPrincipal user,
+                CancellationToken cancellationToken) =>
             {
-                var stream = await getImageAssetHandler.GetImageAsync(id, cancellationToken);
+                var userId = user.FindFirstValue(ClaimTypes.NameIdentifier) switch
+                {
+                    { } uid => UserId.ParseExact(uid, "D"),
+                    _ => UserId.Empty
+                };
+                var result = await getImageAssetHandler.GetImageAsync(userId, @params, cancellationToken);
 
-                return TypedResults.File(stream);
+                return TypedResults.File(result.Stream, result.ContentType);
             })
+            .AddEndpointFilter<ValidationFilter<GetImageAssetParams>>()
             .WithName("GetImageAsset")
             .MapToApiVersion(1);
 
