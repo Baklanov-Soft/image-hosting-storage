@@ -3,8 +3,7 @@
     container_name: image-hosting-storage
     image: ghcr.io/baklanov-soft/image-hosting-storage
     build:
-      context: .
-      dockerfile: ImageHosting.Storage/Dockerfile
+      context: ImageHosting.Storage
     environment:
       Logging__LogLevel__Default: Information
       Logging__LogLevel__Microsoft.AspNetCore: Warning

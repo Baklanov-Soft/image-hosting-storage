@@ -5,7 +5,7 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["ImageHosting.Storage/ImageHosting.Storage.csproj", "ImageHosting.Storage/"]
+COPY ["ImageHosting.Storage.csproj", "ImageHosting.Storage/"]
 RUN dotnet restore "ImageHosting.Storage/ImageHosting.Storage.csproj"
 COPY . .
 WORKDIR "/src/ImageHosting.Storage"
