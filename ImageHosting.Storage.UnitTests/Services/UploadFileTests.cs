@@ -53,7 +53,7 @@ public class UploadFileTests
         var metadataUploadCommandFactory = new MetadataUploadCommandFactory(metadataService);
         var fileService = Substitute.For<IFileService>();
         fileService.WriteFileAsync(Arg.Any<WriteFile>())
-            .ThrowsAsync(new ImageObjectAlreadyExists(userId.ToString(), formFile.FileName));
+            .ThrowsAsync(new ImageObjectAlreadyExistsException(userId.ToString(), formFile.FileName));
         var newImageProducer = Substitute.For<INewImageProducer>();
         var publishNewMessageCommandFactory = new PublishNewMessageCommandFactory(newImageProducer);
         var fileUploadCommandFactory = new FileUploadCommandFactory(fileService);
@@ -62,7 +62,7 @@ public class UploadFileTests
 
         var act = () => sut.UploadAsync(userId, imageId, formFile, hidden, uploadedAt);
 
-        await act.Should().ThrowAsync<RollbackCommandsException>().WithInnerException(typeof(ImageObjectAlreadyExists));
+        await act.Should().ThrowAsync<RollbackCommandsException>().WithInnerException(typeof(ImageObjectAlreadyExistsException));
         await fileService.ReceivedWithAnyArgs().WriteFileAsync(default!);
         await metadataService.DidNotReceiveWithAnyArgs().WriteMetadataAsync(default!);
         await newImageProducer.DidNotReceiveWithAnyArgs().SendAsync(default!);

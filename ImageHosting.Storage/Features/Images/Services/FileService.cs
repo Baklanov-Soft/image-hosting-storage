@@ -26,7 +26,7 @@ public class FileService(IMinioClient minioClient) : IFileService
         var objectStat = await minioClient.StatObjectAsync(statObjectArgs, cancellationToken).ConfigureAwait(false);
         if (objectStat.Size > 0)
         {
-            throw new ImageObjectAlreadyExists(writeFile.UserId, writeFile.ImageId);
+            throw new ImageObjectAlreadyExistsException(writeFile.UserId, writeFile.ImageId);
         }
 
         var stream = writeFile.File.OpenReadStream();
