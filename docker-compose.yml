@@ -19,6 +19,7 @@
       Kafka__Producer__ClientId: image-hosting-storage
       Kafka__Producer__CompressionType: gzip
       Kafka__NewImageTopic: new-images.v1
+      Images__BaseUri: "localhost:8080"
     ports:
       - "127.0.0.1:8080:8080"
     depends_on:

@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using Asp.Versioning;
 using FluentValidation;
 using Hellang.Middleware.ProblemDetails;
@@ -18,8 +17,6 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers()
-    .AddJsonOptions(x => x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
