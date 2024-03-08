@@ -1,0 +1,19 @@
+using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using ImageHosting.Persistence.ValueTypes;
+
+namespace ImageHosting.Storage.Features.Images.Models;
+
+public class ReadImage
+{
+    public required ImageId Id { get; init; }
+    public required string Name { get; init; }
+    public required DateTime UploadedAt { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public IReadOnlyList<string>? Categories { get; init; }
+
+    public required bool Hidden { get; init; }
+    public required Uri Asset { get; init; }
+}

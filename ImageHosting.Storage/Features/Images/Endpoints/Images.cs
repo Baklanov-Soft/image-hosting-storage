@@ -33,7 +33,7 @@ public static class Images
                 var response = await uploadFileHandler.UploadAsync(userId, imageId, file, hidden: false,
                     uploadedAt, cancellationToken);
 
-                return TypedResults.Ok(response);
+                return TypedResults.CreatedAtRoute(response, "GetImage", new { id = response.Id});
             })
             .DisableAntiforgery()
             .WithName("PostImage")
@@ -50,10 +50,22 @@ public static class Images
                 };
                 var result = await getImageAssetHandler.GetImageAsync(userId, @params, cancellationToken);
 
-                return TypedResults.File(result.Stream, result.ContentType);
+                return Results.File(result.Stream, result.ContentType);
             })
             .AddEndpointFilter<ValidationFilter<GetImageAssetParams>>()
             .WithName("GetImageAsset")
+            .MapToApiVersion(1)
+            .Produces(StatusCodes.Status200OK)
+            .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity);
+
+        images.MapGet(pattern: "{id}", handler: async ([FromRoute] ImageId id,
+                [FromServices] IGetImageHandler getImageHandler, CancellationToken cancellationToken) =>
+            {
+                var readImage = await getImageHandler.GetAsync(id, cancellationToken);
+
+                return TypedResults.Ok(readImage);
+            })
+            .WithName("GetImage")
             .MapToApiVersion(1);
 
         return images;
