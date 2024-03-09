@@ -86,4 +86,10 @@ using (var serviceScope = app.Services.CreateScope())
     await initializeUserBucket.CreateDefaultAsync();
 }
 
+using (var serviceScope = app.Services.CreateScope())
+{
+    var initializeKafka = serviceScope.ServiceProvider.GetRequiredService<IInitializeKafka>();
+    await initializeKafka.CreateNewImageTopic();
+}
+
 app.Run();

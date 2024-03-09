@@ -1,13 +1,13 @@
-using ImageHosting.Storage.Generic;
+using ImageHosting.Storage.Models;
+using ImageHosting.Storage.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 
 namespace ImageHosting.Storage.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddMinio(this IServiceCollection services)
+    public static IServiceCollection AddMinioServices(this IServiceCollection services)
     {
         services.AddOptions<MinioOptions>()
             .BindConfiguration(MinioOptions.SectionName)
@@ -19,15 +19,19 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static OptionsBuilder<KafkaOptions> AddKafkaOptions(this IServiceCollection services)
+    public static IServiceCollection AddKafkaServices(this IServiceCollection services)
     {
-        return services.AddOptions<KafkaOptions>()
+        services.AddOptions<KafkaOptions>()
             .BindConfiguration(KafkaOptions.SectionName)
             .ValidateDataAnnotations();
+
+        services.AddScoped<IInitializeKafka, InitializeKafka>();
+        
+        return services;
     }
 
     public static IServiceCollection AddInitializeUserBucket(this IServiceCollection services)
     {
-        return services.AddTransient<IInitializeUserBucket, InitializeUserBucket>();
+        return services.AddScoped<IInitializeUserBucket, InitializeUserBucket>();
     }
 }
