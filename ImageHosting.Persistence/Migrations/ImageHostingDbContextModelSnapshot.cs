@@ -72,7 +72,7 @@ namespace ImageHosting.Storage.Migrations
 
                     b.HasKey("ImageId", "TagName");
 
-                    b.ToTable("ImageTag");
+                    b.ToTable("ImageTags");
                 });
 
             modelBuilder.Entity("ImageHosting.Persistence.Entities.ImageTag", b =>

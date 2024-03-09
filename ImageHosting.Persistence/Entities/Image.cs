@@ -15,5 +15,18 @@ public class Image
     public bool Hidden { get; set; }
     public DateTime UploadedAt { get; set; }
 
-    public HashSet<ImageTag>? Tags { get; set; }
+    public HashSet<ImageTag> Tags { get; } = [];
+
+    public void AddTag(string tagName)
+    {
+        Tags.Add(new ImageTag { Image = this, ImageId = Id, TagName = tagName });
+    }
+
+    public void AddTags(IEnumerable<string> tags)
+    {
+        foreach (var tag in tags)
+        {
+            AddTag(tag);
+        }
+    }
 }

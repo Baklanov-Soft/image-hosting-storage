@@ -24,6 +24,7 @@ public static class ServiceCollectionExtensions
             .AddTransient<IUploadFileHandler, UploadFileHandler>()
             .AddTransient<IGetImageAssetHandler, GetImageAssetHandler>()
             .AddTransient<IGetImageHandler, GetImageHandler>()
-            .AddTransient<IUpdateNameHandler, UpdateNameHandler>();
+            .AddTransient<IUpdateNameHandler, UpdateNameHandler>()
+            .AddTransient<IAddTagsHandler, AddTagsHandler>();
     }
 }

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ImageHosting.Persistence.Migrations
 {
     [DbContext(typeof(ImageHostingDbContext))]
-    [Migration("20240309103014_AddImageTag")]
+    [Migration("20240309213631_AddImageTag")]
     partial class AddImageTag
     {
         /// <inheritdoc />
@@ -75,7 +75,7 @@ namespace ImageHosting.Persistence.Migrations
 
                     b.HasKey("ImageId", "TagName");
 
-                    b.ToTable("ImageTag");
+                    b.ToTable("ImageTags");
                 });
 
             modelBuilder.Entity("ImageHosting.Persistence.Entities.ImageTag", b =>

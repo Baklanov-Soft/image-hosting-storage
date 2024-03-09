@@ -37,6 +37,7 @@ public static class Images
             })
             .DisableAntiforgery()
             .WithName("PostImage")
+            .WithTags("Images")
             .MapToApiVersion(1);
 
         images.MapGet(pattern: "{id}/asset", handler: async ([AsParameters] GetImageAssetParams @params,
@@ -55,6 +56,7 @@ public static class Images
             })
             .AddEndpointFilter<ValidationFilter<GetImageAssetParams>>()
             .WithName("GetImageAsset")
+            .WithTags("Images")
             .MapToApiVersion(1)
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity);
@@ -67,19 +69,36 @@ public static class Images
                 return TypedResults.Ok(readImage);
             })
             .WithName("GetImage")
+            .WithTags("Images")
             .MapToApiVersion(1);
 
         images.MapPut(pattern: "{id}/name", async ([FromRoute] ImageId id, [FromBody] UpdateNameCommand command,
-            [FromServices] IUpdateNameHandler updateNameHandler, CancellationToken cancellationToken) =>
-        {
-            var readImage = await updateNameHandler.UpdateAsync(id, command.NewName, cancellationToken);
+                [FromServices] IUpdateNameHandler updateNameHandler, CancellationToken cancellationToken) =>
+            {
+                var readImage = await updateNameHandler.UpdateAsync(id, command.NewName, cancellationToken);
 
-            return TypedResults.Ok(readImage);
-        })
-        .AddEndpointFilter<ValidationFilter<UpdateNameCommand>>()
-        .WithName("UpdateName")
-        .MapToApiVersion(1);
-        
+                return Results.Ok(readImage);
+            })
+            .AddEndpointFilter<ValidationFilter<UpdateNameCommand>>()
+            .WithName("UpdateName")
+            .WithTags("Images")
+            .Produces<ReadImage>()
+            .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
+            .MapToApiVersion(1);
+
+        var tags = images.MapGroup(prefix: "{id}/tags");
+
+        tags.MapPost(pattern: "", handler: async ([FromRoute] ImageId id, [FromBody] AddTagsCommand addTagsCommand,
+                [FromServices] IAddTagsHandler addTagsHandler, CancellationToken cancellationToken) =>
+            {
+                var response = await addTagsHandler.AddAsync(id, addTagsCommand.Tags, cancellationToken);
+
+                return TypedResults.Ok(response);
+            })
+            .WithName("AddTag")
+            .WithTags("Tags")
+            .MapToApiVersion(1);
+
         return images;
     }
 }
