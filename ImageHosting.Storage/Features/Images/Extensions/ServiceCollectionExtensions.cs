@@ -1,6 +1,6 @@
 using ImageHosting.Storage.Features.Images.Handlers;
 using ImageHosting.Storage.Features.Images.Services;
-using ImageHosting.Storage.Generic;
+using ImageHosting.Storage.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ImageHosting.Storage.Features.Images.Extensions;

@@ -1,6 +1,6 @@
 using Minio;
 
-namespace ImageHosting.Storage.Generic;
+namespace ImageHosting.Storage.Services;
 
 public interface IMinioClientFactory
 {

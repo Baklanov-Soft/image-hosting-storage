@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Confluent.Kafka;
 using ImageHosting.Storage.Features.Images.Models;
-using ImageHosting.Storage.Generic;
+using ImageHosting.Storage.Models;
 using Microsoft.Extensions.Options;
 
 namespace ImageHosting.Storage.Features.Images.Services;
@@ -22,7 +22,7 @@ public sealed class NewImageProducer : INewImageProducer
 
     public Task SendAsync(NewImage newImage, CancellationToken cancellationToken = default)
     {
-        return _producer.ProduceAsync(_options.NewImageTopic, new Message<Null, NewImage>
+        return _producer.ProduceAsync(_options.NewImageTopic.Name, new Message<Null, NewImage>
         {
             Value = newImage
         }, cancellationToken);

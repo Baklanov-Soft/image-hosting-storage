@@ -8,8 +8,8 @@ using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Extensions.DependencyInjection;
 using ImageHosting.Storage.Features.Images.Endpoints;
 using ImageHosting.Storage.Features.Images.Extensions;
-using ImageHosting.Storage.Generic;
 using ImageHosting.Storage.OpenApi;
+using ImageHosting.Storage.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,12 +31,12 @@ builder.Services.AddSwaggerGen(options =>
         Format = "uuid"
     });
 });
-builder.Services.AddMinio();
+builder.Services.AddMinioServices();
 builder.Services.AddImageServices();
 builder.Services.AddImageHostingDbContext("ImageHosting");
 ProblemDetailsExtensions.AddProblemDetails(builder.Services)
     .AddProblemDetailsConventions();
-builder.Services.AddKafkaOptions();
+builder.Services.AddKafkaServices();
 builder.Services.AddInitializeUserBucket();
 builder.Services.AddApiVersioning()
     .AddApiExplorer(options =>
