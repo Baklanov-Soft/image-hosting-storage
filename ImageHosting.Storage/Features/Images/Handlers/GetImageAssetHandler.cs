@@ -11,18 +11,17 @@ namespace ImageHosting.Storage.Features.Images.Handlers;
 
 public interface IGetImageAssetHandler
 {
-    Task<GetImageAssetResult> GetImageAsync(UserId userId, GetImageAssetParams @params,
+    Task<GetImageAssetResult> GetImageAsync(UserId userId, string objectName,
         CancellationToken cancellationToken = default);
 }
 
 public class GetImageAssetHandler(IMinioClient minioClient) : IGetImageAssetHandler
 {
-    public async Task<GetImageAssetResult> GetImageAsync(UserId userId, GetImageAssetParams @params,
+    public async Task<GetImageAssetResult> GetImageAsync(UserId userId, string objectName,
         CancellationToken cancellationToken = default)
     {
         var memoryStream = new MemoryStream();
         var bucket = userId.ToString();
-        var objectName = @params.GetObjectName();
 
         var statObjectArgs = new StatObjectArgs()
             .WithBucket(bucket)

@@ -12,7 +12,7 @@ public static class ServiceCollectionExtensions
         services.AddOptions<ImagesOptions>()
             .BindConfiguration(ImagesOptions.SectionName)
             .ValidateDataAnnotations();
-        
+
         services.AddSingleton<INewImageProducer, NewImageProducer>();
 
         return services
@@ -23,6 +23,7 @@ public static class ServiceCollectionExtensions
             .AddTransient<IPublishNewMessageCommandFactory, PublishNewMessageCommandFactory>()
             .AddTransient<IUploadFileHandler, UploadFileHandler>()
             .AddTransient<IGetImageAssetHandler, GetImageAssetHandler>()
-            .AddTransient<IGetImageHandler, GetImageHandler>();
+            .AddTransient<IGetImageHandler, GetImageHandler>()
+            .AddTransient<IUpdateNameHandler, UpdateNameHandler>();
     }
 }

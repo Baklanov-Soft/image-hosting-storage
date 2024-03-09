@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using ImageHosting.Persistence.Entities;
 using ImageHosting.Persistence.ValueTypes;
 
 namespace ImageHosting.Storage.Features.Images.Models;
@@ -16,4 +17,17 @@ public class ReadImage
 
     public required bool Hidden { get; init; }
     public required Uri Asset { get; init; }
+
+    public static ReadImage From(Image i, Uri baseUri)
+    {
+        return new ReadImage
+        {
+            Id = i.Id,
+            Name = i.ObjectName,
+            UploadedAt = i.UploadedAt,
+            Hidden = i.Hidden,
+            Categories = i.Categories,
+            Asset = new Uri(baseUri, $"api/v1/images/{i.Id}/asset")
+        };
+    }
 }

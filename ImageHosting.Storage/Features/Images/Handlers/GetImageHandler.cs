@@ -30,7 +30,7 @@ public class GetImageHandler(IImageHostingDbContext dbContext, IOptions<ImagesOp
             .FirstOrDefaultAsync(cancellationToken);
         if (image is null)
         {
-            throw new ImageMetadataNotFound(id);
+            throw new ImageMetadataNotFoundException(id);
         }
 
         return image;

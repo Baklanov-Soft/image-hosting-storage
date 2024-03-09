@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +9,7 @@ public class ValidationFilter<T>(IValidator<T> validator) : IEndpointFilter
 {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
-        var argument = context.GetArgument<T>(0);
+        var argument = context.Arguments.OfType<T>().FirstOrDefault();
         if (argument is not null)
         {
             var validationResult = await validator.ValidateAsync(argument);

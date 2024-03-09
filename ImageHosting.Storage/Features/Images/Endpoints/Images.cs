@@ -33,7 +33,7 @@ public static class Images
                 var response = await uploadFileHandler.UploadAsync(userId, imageId, file, hidden: false,
                     uploadedAt, cancellationToken);
 
-                return TypedResults.CreatedAtRoute(response, "GetImage", new { id = response.Id});
+                return TypedResults.CreatedAtRoute(response, "GetImage", new { id = response.Id });
             })
             .DisableAntiforgery()
             .WithName("PostImage")
@@ -48,7 +48,8 @@ public static class Images
                     { } uid => UserId.ParseExact(uid, "D"),
                     _ => UserId.Empty
                 };
-                var result = await getImageAssetHandler.GetImageAsync(userId, @params, cancellationToken);
+                var objectName = @params.GetObjectName();
+                var result = await getImageAssetHandler.GetImageAsync(userId, objectName, cancellationToken);
 
                 return Results.File(result.Stream, result.ContentType);
             })
@@ -68,6 +69,17 @@ public static class Images
             .WithName("GetImage")
             .MapToApiVersion(1);
 
+        images.MapPut(pattern: "{id}/name", async ([FromRoute] ImageId id, [FromBody] UpdateNameCommand command,
+            [FromServices] IUpdateNameHandler updateNameHandler, CancellationToken cancellationToken) =>
+        {
+            var readImage = await updateNameHandler.UpdateAsync(id, command.NewName, cancellationToken);
+
+            return TypedResults.Ok(readImage);
+        })
+        .AddEndpointFilter<ValidationFilter<UpdateNameCommand>>()
+        .WithName("UpdateName")
+        .MapToApiVersion(1);
+        
         return images;
     }
 }
