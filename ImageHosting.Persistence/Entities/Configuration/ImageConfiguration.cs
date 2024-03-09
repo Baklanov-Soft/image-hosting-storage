@@ -13,7 +13,11 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
         builder.Property(i => i.ObjectName).HasMaxLength(200);
         builder.Property(i => i.Hidden).HasDefaultValue(false);
         builder.HasIndex(i => i.Hidden);
-        builder.Property(i => i.Categories).HasColumnType("varchar(200)[]");
         builder.Property(i => i.UserId).HasConversion<UserId.ValueConverter>();
+
+        builder.HasMany(i => i.Tags)
+            .WithOne(it => it.Image)
+            .HasForeignKey(it => it.ImageId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
