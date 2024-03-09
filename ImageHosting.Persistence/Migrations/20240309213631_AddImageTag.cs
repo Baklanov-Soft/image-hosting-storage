@@ -17,7 +17,7 @@ namespace ImageHosting.Persistence.Migrations
                 table: "Images");
 
             migrationBuilder.CreateTable(
-                name: "ImageTag",
+                name: "ImageTags",
                 columns: table => new
                 {
                     ImageId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -25,9 +25,9 @@ namespace ImageHosting.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ImageTag", x => new { x.ImageId, x.TagName });
+                    table.PrimaryKey("PK_ImageTags", x => new { x.ImageId, x.TagName });
                     table.ForeignKey(
-                        name: "FK_ImageTag_Images_ImageId",
+                        name: "FK_ImageTags_Images_ImageId",
                         column: x => x.ImageId,
                         principalTable: "Images",
                         principalColumn: "Id",
@@ -39,7 +39,7 @@ namespace ImageHosting.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ImageTag");
+                name: "ImageTags");
 
             migrationBuilder.AddColumn<List<string>>(
                 name: "Categories",
