@@ -1,5 +1,5 @@
 using ImageHosting.Storage.Exceptions;
-using ImageHosting.Storage.Generic;
+using ImageHosting.Storage.Models;
 using NSubstitute.ExceptionExtensions;
 
 namespace ImageHosting.Storage.UnitTests.Generic;

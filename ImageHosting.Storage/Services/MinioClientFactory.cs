@@ -1,7 +1,8 @@
+using ImageHosting.Storage.Models;
 using Microsoft.Extensions.Options;
 using Minio;
 
-namespace ImageHosting.Storage.Generic;
+namespace ImageHosting.Storage.Services;
 
 public class MinioClientFactory(IOptions<MinioOptions> options) : IMinioClientFactory
 {

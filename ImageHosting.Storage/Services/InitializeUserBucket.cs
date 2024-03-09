@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Minio;
 using Minio.DataModel.Args;
 
-namespace ImageHosting.Storage.Generic;
+namespace ImageHosting.Storage.Services;
 
 public class InitializeUserBucket(IMinioClient minioClient) : IInitializeUserBucket
 {

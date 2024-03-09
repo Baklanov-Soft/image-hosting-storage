@@ -15,10 +15,13 @@
       Minio__Secure: false
       ConnectionStrings__ImageHosting: "Host=metadata-db;Port=5432;Database=image_hosting;Username=image_hosting;Password=P@ssw0rd;Include Error Detail=true"
       ASPNETCORE_ENVIRONMENT: Development
+      Kafka__Admin__BootstrapServers: kafka:9092
       Kafka__Producer__BootstrapServers: kafka:9092
       Kafka__Producer__ClientId: image-hosting-storage
       Kafka__Producer__CompressionType: gzip
-      Kafka__NewImageTopic: new-images.v1
+      Kafka__NewImageTopic__Name: new-images.v1
+      Kafka__NewImageTopic__ReplicationFactor: 1
+      Kafka__NewImageTopic__NumPartitions: 2
       Images__BaseUri: "localhost:8080"
     ports:
       - "127.0.0.1:8080:8080"
@@ -75,26 +78,12 @@
       KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
       KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_KRAFT_CLUSTER_ID: LelM2dIFQkiUFvXCEcqRWA
-  
-  kafka-init:
-    container_name: kafka-init
-    image: bitnami/kafka:3.6.1
-    depends_on:
-      - kafka
-    entrypoint: "kafka-topics.sh"
-    command: [
-      "--bootstrap-server", "kafka:9092",
-      "--create",
-      "--replication-factor", "1",
-      "--partitions", "2",
-      "--topic", "new-images.v1"
-    ]
-  
+
   resizer:
     image: ghcr.io/baklanov-soft/image-hosting-processing-resizer:master
     container_name: resizer
     depends_on:
-      - kafka-init
+      - image-hosting-storage
       - images-s3
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092

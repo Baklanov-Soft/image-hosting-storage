@@ -1,12 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 using Confluent.Kafka;
+using Confluent.Kafka.Admin;
 
-namespace ImageHosting.Storage.Generic;
+namespace ImageHosting.Storage.Models;
 
 public class KafkaOptions
 {
     public const string SectionName = "Kafka";
 
+    [Required] public required AdminClientConfig Admin { get; init; }
     [Required] public required ProducerConfig Producer { get; init; }
-    [Required(AllowEmptyStrings = false)] public required string NewImageTopic { get; init; }
+    [Required] public required TopicSpecification NewImageTopic { get; init; }
 }

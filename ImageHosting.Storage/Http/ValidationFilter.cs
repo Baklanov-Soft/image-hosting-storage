@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 
-namespace ImageHosting.Storage.Generic;
+namespace ImageHosting.Storage.Http;
 
 public class ValidationFilter<T>(IValidator<T> validator) : IEndpointFilter
 {

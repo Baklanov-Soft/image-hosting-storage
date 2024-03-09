@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using ImageHosting.Storage.Exceptions;
 
-namespace ImageHosting.Storage.Generic;
+namespace ImageHosting.Storage.Models;
 
 public class RollbackCommands
 {
@@ -33,7 +33,7 @@ public class RollbackCommands
         {
             while (i < _commands.Count)
             {
-                await _commands[i].ExecuteAsync(cancellationToken);
+                await _commands[i].ExecuteAsync(cancellationToken).ConfigureAwait(false);
                 i++;
             }
         }
@@ -44,7 +44,10 @@ public class RollbackCommands
             i--;
             while (i >= 0)
             {
-                await _commands[i].RollbackAsync();
+                // ReSharper disable once MethodSupportsCancellation
+#pragma warning disable CA2016
+                await _commands[i].RollbackAsync().ConfigureAwait(false);
+#pragma warning restore CA2016
                 i--;
             }
 

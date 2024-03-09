@@ -6,7 +6,7 @@ using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Features.Images.Exceptions;
 using ImageHosting.Storage.Features.Images.Extensions;
 using ImageHosting.Storage.Features.Images.Models;
-using ImageHosting.Storage.Generic;
+using ImageHosting.Storage.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 

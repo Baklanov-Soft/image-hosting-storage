@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Features.Images.Models;
-using ImageHosting.Storage.Generic;
+using ImageHosting.Storage.Models;
 
 namespace ImageHosting.Storage.Features.Images.Services;
 

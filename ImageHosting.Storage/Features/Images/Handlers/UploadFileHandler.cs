@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Features.Images.Models;
 using ImageHosting.Storage.Features.Images.Services;
-using ImageHosting.Storage.Generic;
+using ImageHosting.Storage.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace ImageHosting.Storage.Features.Images.Handlers;

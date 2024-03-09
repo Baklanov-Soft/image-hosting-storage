@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ImageHosting.Storage.Generic;
+namespace ImageHosting.Storage.Models;
 
 public class MinioOptions
 {

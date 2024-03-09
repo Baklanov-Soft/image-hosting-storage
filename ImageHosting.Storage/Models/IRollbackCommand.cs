@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ImageHosting.Storage.Generic;
+namespace ImageHosting.Storage.Models;
 
 public interface IRollbackCommand
 {
