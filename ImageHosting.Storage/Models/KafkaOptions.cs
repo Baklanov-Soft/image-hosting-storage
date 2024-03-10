@@ -10,5 +10,5 @@ public class KafkaOptions
 
     [Required] public required AdminClientConfig Admin { get; init; }
     [Required] public required ProducerConfig Producer { get; init; }
-    [Required] public required TopicSpecification NewImageTopic { get; init; }
+    [Required] public required TopicSpecification NewImagesTopic { get; init; }
 }

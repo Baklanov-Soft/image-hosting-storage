@@ -19,9 +19,9 @@
       Kafka__Producer__BootstrapServers: kafka:9092
       Kafka__Producer__ClientId: image-hosting-storage
       Kafka__Producer__CompressionType: gzip
-      Kafka__NewImageTopic__Name: new-images.v1
-      Kafka__NewImageTopic__ReplicationFactor: 1
-      Kafka__NewImageTopic__NumPartitions: 2
+      Kafka__NewImagesTopic__Name: new-images.v1
+      Kafka__NewImagesTopic__ReplicationFactor: 1
+      Kafka__NewImagesTopic__NumPartitions: 2
       Images__BaseUri: "localhost:8080"
     ports:
       - "127.0.0.1:8080:8080"

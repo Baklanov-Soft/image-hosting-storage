@@ -22,7 +22,7 @@ public sealed class NewImageProducer : INewImageProducer
 
     public Task SendAsync(NewImage newImage, CancellationToken cancellationToken = default)
     {
-        return _producer.ProduceAsync(_options.NewImageTopic.Name, new Message<Null, NewImage>
+        return _producer.ProduceAsync(_options.NewImagesTopic.Name, new Message<Null, NewImage>
         {
             Value = newImage
         }, cancellationToken);
