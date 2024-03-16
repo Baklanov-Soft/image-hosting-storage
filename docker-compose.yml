@@ -133,7 +133,7 @@
       MINIO_USER: minioadmin
       MINIO_PASSWORD: minioadmin
       DEBUG_CATEGORIES: true
-    
+
   kafka-init-categories:
     container_name: kafka-init-categories
     image: bitnami/kafka:3.6.1
