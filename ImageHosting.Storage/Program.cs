@@ -5,6 +5,7 @@ using Hellang.Middleware.ProblemDetails.Mvc;
 using ImageHosting.Persistence.DbContexts;
 using ImageHosting.Persistence.Extensions.DependencyInjection;
 using ImageHosting.Persistence.ValueTypes;
+using ImageHosting.Storage;
 using ImageHosting.Storage.Extensions.DependencyInjection;
 using ImageHosting.Storage.Features.Images.Endpoints;
 using ImageHosting.Storage.Features.Images.Extensions;
@@ -46,6 +47,7 @@ builder.Services.AddApiVersioning()
     });
 builder.Services.ConfigureOptions<NamedSwaggerGenOptions>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(Program));
+builder.Services.AddHostedService<ImageTaggingWorker>();
 
 var app = builder.Build();
 

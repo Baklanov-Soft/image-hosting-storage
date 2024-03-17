@@ -6,3 +6,4 @@ riderModule.iml
 .idea/
 *.sln.DotSettings.user
 *.opencover.xml
+/recognizer

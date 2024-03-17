@@ -9,7 +9,7 @@ namespace ImageHosting.Storage.Services;
 public class InitializeKafka(IOptions<KafkaOptions> options) : IInitializeKafka
 {
     private readonly IAdminClient _adminClient = new AdminClientBuilder(options.Value.Admin).Build();
-    private readonly TopicSpecification _newImageTopicSpecification = options.Value.NewImageTopic;
+    private readonly TopicSpecification _newImageTopicSpecification = options.Value.NewImagesTopic;
 
     public async Task CreateNewImageTopic()
     {
