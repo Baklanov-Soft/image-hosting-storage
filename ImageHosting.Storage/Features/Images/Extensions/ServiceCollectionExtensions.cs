@@ -15,6 +15,8 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<INewImageProducer, NewImageProducer>();
 
+        services.AddScoped<IAssignTagsService, AssignTagsService>();
+        
         return services
             .AddTransient<IFileService, FileService>()
             .AddTransient<IFileUploadCommandFactory, FileUploadCommandFactory>()

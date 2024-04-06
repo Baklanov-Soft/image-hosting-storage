@@ -10,5 +10,13 @@ public class KafkaOptions
 
     [Required] public required AdminClientConfig Admin { get; init; }
     [Required] public required ProducerConfig Producer { get; init; }
-    [Required] public required TopicSpecification NewImageTopic { get; init; }
+    [Required] public required ConsumerConfig Consumer { get; init; }
+    [Required] public required TopicSpecification NewImagesTopic { get; init; }
+    [Required] public required TopicOptions CategoriesTopic { get; init; }
+}
+
+public class TopicOptions
+{
+    [Required(AllowEmptyStrings = false)] public required string Name { get; init; }
+    [Required] public required double Threshold { get; init; }
 }
