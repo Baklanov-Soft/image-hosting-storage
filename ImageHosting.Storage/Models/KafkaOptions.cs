@@ -19,5 +19,4 @@ public class TopicOptions
 {
     [Required(AllowEmptyStrings = false)] public required string Name { get; init; }
     [Required] public required double Threshold { get; init; }
-    [Required] public required long CommitPeriod { get; init; }
 }

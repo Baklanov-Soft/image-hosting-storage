@@ -21,10 +21,11 @@ public sealed class ImageTaggingWorker(IOptions<KafkaOptions> options, IServiceS
 
     private readonly string _categoriesTopicName = options.Value.CategoriesTopic.Name;
     private readonly double _threshold = options.Value.CategoriesTopic.Threshold;
-    private readonly long _commitPeriod = options.Value.CategoriesTopic.CommitPeriod;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        await Task.Yield();
+
         _consumer.Subscribe(_categoriesTopicName);
 
         while (!stoppingToken.IsCancellationRequested)
@@ -33,30 +34,17 @@ public sealed class ImageTaggingWorker(IOptions<KafkaOptions> options, IServiceS
             {
                 var consumeResult = _consumer.Consume(stoppingToken);
 
-                using var scope = serviceScopeFactory.CreateScope();
-                var assignCategoriesService = scope.ServiceProvider.GetRequiredService<IAssignTagsService>();
+                using (var scope = serviceScopeFactory.CreateScope())
+                {
+                    var assignCategoriesService = scope.ServiceProvider.GetRequiredService<IAssignTagsService>();
 
-                var categorizedNewImage = consumeResult.Message.Value;
+                    var (imageId, categories) = consumeResult.Message.Value;
 
-                await assignCategoriesService.AssignTagsAsync(categorizedNewImage.ImageId,
-                    categorizedNewImage.Categories, _threshold, stoppingToken);
+                    await assignCategoriesService.AssignTagsAsync(imageId, categories, _threshold, stoppingToken);
+                }
 
                 _consumer.StoreOffset(consumeResult);
-                if (consumeResult.Offset % _commitPeriod == 0)
-                {
-                    try
-                    {
-                        _consumer.Commit(consumeResult);
-                    }
-                    catch (KafkaException)
-                    {
-                        break;
-                    }
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                break;
+                _consumer.Commit(consumeResult);
             }
             catch (ConsumeException e)
             {
