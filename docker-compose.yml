@@ -15,24 +15,21 @@
       Minio__Secure: false
       ConnectionStrings__ImageHosting: "Host=postgres;Port=5432;Database=image_hosting;Username=image_hosting;Password=P@ssw0rd;Include Error Detail=true"
       ASPNETCORE_ENVIRONMENT: Development
-      Kafka__Admin__BootstrapServers: kafka:9092
-      Kafka__Producer__BootstrapServers: kafka:9092
-      Kafka__Producer__ClientId: image-hosting-storage
-      Kafka__Producer__CompressionType: gzip
-      Kafka__NewImagesTopic__Name: new-images.v1
-      Kafka__NewImagesTopic__ReplicationFactor: 1
-      Kafka__NewImagesTopic__NumPartitions: 2
+      Kafka__BootstrapServers__0: kafka:9092
+      Kafka__NewImagesProducer__TopicName: new-images.v1
+      Kafka__CategoriesConsumer__TopicName: categories.v1
+      Kafka__CategoriesConsumer__GroupId: image-tagger
+      Kafka__CategoriesConsumer__Threshold: 0.8
       Images__BaseUri: "localhost:8080"
     ports:
       - "127.0.0.1:8080:8080"
     depends_on:
-      minio:
-        condition: service_started
-      postgres:
-        condition: service_healthy
-      kafka:
-        condition: service_started
-  
+      - minio
+      - postgres
+      - kafka
+      - kafka-init-new-images
+      - kafka-init-categories
+
   minio:
     container_name: minio
     image: quay.io/minio/minio:RELEASE.2024-01-31T20-20-33Z
@@ -57,11 +54,6 @@
       POSTGRES_PASSWORD: P@ssw0rd
     ports:
       - "127.0.0.1:5432:5432"
-    healthcheck:
-      test: [ "CMD", "pg_isready", "-d", "image_hosting", "-U", "image_hosting" ]
-      interval: 10s
-      timeout: 5s
-      retries: 3
     command: [ "postgres", "-c", "log_statement=all" ]
 
   kafka:
@@ -82,7 +74,7 @@
       KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
     volumes:
       - kafka-data:/bitnami/kafka
-      
+  
   kafka-init-new-images:
     container_name: kafka-init-new-images
     image: bitnami/kafka:3.6.1
@@ -96,7 +88,7 @@
       "--partitions", "2",
       "--replication-factor", "1"
     ]
-    
+  
   kafka-init-categories:
     container_name: kafka-init-categories
     image: bitnami/kafka:3.6.1
@@ -127,7 +119,7 @@
     image: ghcr.io/baklanov-soft/image-hosting-processing-resizer:master
     container_name: resizer
     depends_on:
-      - image-hosting-storage
+      - kafka-init-new-images
       - minio
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
@@ -140,7 +132,7 @@
     image: ghcr.io/baklanov-soft/image-hosting-processing-recognizer:master
     container_name: recognizer
     depends_on:
-      - image-hosting-storage
+      - kafka-init-new-images
       - kafka-init-categories
       - minio
     volumes:
