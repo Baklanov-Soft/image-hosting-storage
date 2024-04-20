@@ -1,10 +1,12 @@
 using Asp.Versioning;
+using Confluent.Kafka;
 using FluentValidation;
 using Hellang.Middleware.ProblemDetails;
 using Hellang.Middleware.ProblemDetails.Mvc;
 using ImageHosting.Persistence.DbContexts;
 using ImageHosting.Persistence.Extensions.DependencyInjection;
 using ImageHosting.Persistence.ValueTypes;
+using ImageHosting.Storage;
 using ImageHosting.Storage.Extensions.DependencyInjection;
 using ImageHosting.Storage.Features.Images.Endpoints;
 using ImageHosting.Storage.Features.Images.Extensions;
@@ -51,6 +53,8 @@ builder.Services.AddValidatorsFromAssemblyContaining(typeof(Program));
 
 var newImagesTopicName = builder.Configuration["Kafka:NewImagesProducer:TopicName"];
 var bootstrapServers = builder.Configuration["Kafka:BootstrapServers"];
+var categoriesTopicName = builder.Configuration["Kafka:CategoriesConsumer:TopicName"];
+var categoriesGroupId = builder.Configuration["Kafka:CategoriesConsumer:GroupId"];
 
 builder.Services.AddMassTransit(massTransit =>
 {
@@ -59,10 +63,16 @@ builder.Services.AddMassTransit(massTransit =>
     massTransit.AddRider(rider =>
     {
         rider.AddProducer<NewImage>(newImagesTopicName);
+        rider.AddConsumer<AssignTagsConsumer>(consumerDefinitionType: typeof(AssignTagsConsumerDefinition));
 
         rider.UsingKafka((context, kafka) =>
         {
             kafka.Host(bootstrapServers);
+            kafka.TopicEndpoint<CategorizedNewImage>(categoriesTopicName, categoriesGroupId, endpoint =>
+            {
+                endpoint.AutoOffsetReset = AutoOffsetReset.Earliest;
+                endpoint.ConfigureConsumer<AssignTagsConsumer>(context);
+            });
         });
     });
 });
