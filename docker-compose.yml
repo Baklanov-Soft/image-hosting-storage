@@ -82,6 +82,46 @@
       KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
     volumes:
       - kafka-data:/bitnami/kafka
+      
+  kafka-init-new-images:
+    container_name: kafka-init-new-images
+    image: bitnami/kafka:3.6.1
+    depends_on:
+      - kafka
+    entrypoint: "kafka-topics.sh"
+    command: [
+      "--bootstrap-server", "kafka:9092",
+      "--create",
+      "--topic", "new-images.v1",
+      "--partitions", "2",
+      "--replication-factor", "1"
+    ]
+    
+  kafka-init-categories:
+    container_name: kafka-init-categories
+    image: bitnami/kafka:3.6.1
+    depends_on:
+      - kafka
+    entrypoint: "kafka-topics.sh"
+    command: [
+      "--bootstrap-server", "kafka:9092",
+      "--create",
+      "--topic", "categories.v1",
+      "--partitions", "2",
+      "--replication-factor", "1"
+    ]
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    container_name: kafka-ui
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      SERVER_PORT: 8000
+      KAFKA_CLUSTERS_0_NAME: image-hosting
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    depends_on:
+      - kafka
 
   resizer:
     image: ghcr.io/baklanov-soft/image-hosting-processing-resizer:master
@@ -95,19 +135,6 @@
       MINIO_HOST: "http://minio:9000"
       MINIO_USER: minioadmin
       MINIO_PASSWORD: minioadmin
-
-  kafka-ui:
-    image: provectuslabs/kafka-ui
-    container_name: kafka-ui
-    ports:
-      - "127.0.0.1:8000:8000"
-    environment:
-      SERVER_PORT: 8000
-      KAFKA_CLUSTERS_0_NAME: image-hosting
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-      KAFKA_CLUSTERS_0_READONLY: true
-    depends_on:
-      - kafka
 
   recognizer:
     image: ghcr.io/baklanov-soft/image-hosting-processing-recognizer:master
@@ -133,20 +160,6 @@
       MINIO_USER: minioadmin
       MINIO_PASSWORD: minioadmin
       DEBUG_CATEGORIES: true
-
-  kafka-init-categories:
-    container_name: kafka-init-categories
-    image: bitnami/kafka:3.6.1
-    depends_on:
-      - kafka
-    entrypoint: "kafka-topics.sh"
-    command: [
-      "--bootstrap-server", "kafka:9092",
-      "--create",
-      "--replication-factor", "1",
-      "--partitions", "2",
-      "--topic", "categories.v1"
-    ]
 
 volumes:
   minio-data:

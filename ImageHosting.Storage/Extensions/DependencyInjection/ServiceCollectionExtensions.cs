@@ -24,8 +24,6 @@ public static class ServiceCollectionExtensions
         services.AddOptions<KafkaOptions>()
             .BindConfiguration(KafkaOptions.SectionName)
             .ValidateDataAnnotations();
-
-        services.AddScoped<IInitializeKafka, InitializeKafka>();
         
         return services;
     }
