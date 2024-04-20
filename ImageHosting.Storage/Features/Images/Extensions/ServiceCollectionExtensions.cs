@@ -13,9 +13,7 @@ public static class ServiceCollectionExtensions
             .BindConfiguration(ImagesOptions.SectionName)
             .ValidateDataAnnotations();
 
-        services.AddSingleton<INewImageProducer, NewImageProducer>();
-
-        services.AddScoped<IAssignTagsService, AssignTagsService>();
+        services.AddScoped<INewImageProducer, NewImageProducer>();
         
         return services
             .AddTransient<IFileService, FileService>()

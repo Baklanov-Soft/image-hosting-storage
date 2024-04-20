@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Confluent.Kafka;
 using FluentValidation;
 using Hellang.Middleware.ProblemDetails;
 using Hellang.Middleware.ProblemDetails.Mvc;
@@ -9,8 +10,10 @@ using ImageHosting.Storage;
 using ImageHosting.Storage.Extensions.DependencyInjection;
 using ImageHosting.Storage.Features.Images.Endpoints;
 using ImageHosting.Storage.Features.Images.Extensions;
+using ImageHosting.Storage.Features.Images.Models;
 using ImageHosting.Storage.OpenApi;
 using ImageHosting.Storage.Services;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -37,7 +40,7 @@ builder.Services.AddImageServices();
 builder.Services.AddImageHostingDbContext("ImageHosting");
 ProblemDetailsExtensions.AddProblemDetails(builder.Services)
     .AddProblemDetailsConventions();
-builder.Services.AddKafkaServices();
+builder.Services.AddKafkaOptions();
 builder.Services.AddInitializeUserBucket();
 builder.Services.AddApiVersioning()
     .AddApiExplorer(options =>
@@ -47,7 +50,33 @@ builder.Services.AddApiVersioning()
     });
 builder.Services.ConfigureOptions<NamedSwaggerGenOptions>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(Program));
-builder.Services.AddHostedService<ImageTaggingWorker>();
+
+var newImagesTopicName = builder.Configuration["Kafka:NewImagesProducer:TopicName"];
+var bootstrapServers = builder.Configuration["Kafka:BootstrapServers"];
+var categoriesTopicName = builder.Configuration["Kafka:CategoriesConsumer:TopicName"];
+var categoriesGroupId = builder.Configuration["Kafka:CategoriesConsumer:GroupId"];
+
+builder.Services.AddMassTransit(massTransit =>
+{
+    massTransit.UsingInMemory();
+
+    massTransit.AddRider(rider =>
+    {
+        rider.AddProducer<NewImage>(newImagesTopicName);
+        rider.AddConsumer<AssignTagsConsumer>(consumerDefinitionType: typeof(AssignTagsConsumerDefinition));
+
+        rider.UsingKafka((context, kafka) =>
+        {
+            kafka.Host(bootstrapServers);
+            kafka.TopicEndpoint<CategorizedNewImage>(categoriesTopicName, categoriesGroupId, endpoint =>
+            {
+                endpoint.AutoOffsetReset = AutoOffsetReset.Earliest;
+                endpoint.ConfigureConsumer<AssignTagsConsumer>(context);
+            });
+        });
+    });
+});
+
 
 var app = builder.Build();
 

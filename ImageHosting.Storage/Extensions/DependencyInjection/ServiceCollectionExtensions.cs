@@ -19,7 +19,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddKafkaServices(this IServiceCollection services)
+    public static IServiceCollection AddKafkaOptions(this IServiceCollection services)
     {
         services.AddOptions<KafkaOptions>()
             .BindConfiguration(KafkaOptions.SectionName)

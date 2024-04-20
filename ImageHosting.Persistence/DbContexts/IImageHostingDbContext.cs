@@ -7,9 +7,9 @@ public interface IImageHostingDbContext
 {
     DbSet<Image> Images { get; }
     DbSet<ForbiddenCategory> ForbiddenCategories { get; }
-    
+
     /// <inheritdoc cref="DbContext"/>
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="RelationalDatabaseFacadeExtensions.Migrate"/>
     void Migrate();
