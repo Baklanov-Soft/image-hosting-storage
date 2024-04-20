@@ -71,8 +71,9 @@ builder.Services.AddMassTransit(massTransit =>
             kafka.Host(bootstrapServers);
             kafka.TopicEndpoint<CategorizedNewImage>(categoriesTopicName, categoriesGroupId, endpoint =>
             {
-                endpoint.AutoOffsetReset = AutoOffsetReset.Earliest;
                 endpoint.ConfigureConsumer<AssignTagsConsumer>(context);
+                endpoint.AutoOffsetReset = AutoOffsetReset.Earliest;
+                endpoint.ConcurrentDeliveryLimit = 10;
             });
         });
     });
