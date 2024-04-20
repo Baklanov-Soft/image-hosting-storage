@@ -65,7 +65,6 @@ public static class Images
                 [FromServices] IGetImageHandler getImageHandler, CancellationToken cancellationToken) =>
             {
                 var readImage = await getImageHandler.GetAsync(id, cancellationToken);
-
                 return TypedResults.Ok(readImage);
             })
             .WithName("GetImage")
@@ -76,7 +75,6 @@ public static class Images
                 [FromServices] IUpdateNameHandler updateNameHandler, CancellationToken cancellationToken) =>
             {
                 var readImage = await updateNameHandler.UpdateAsync(id, command.NewName, cancellationToken);
-
                 return Results.Ok(readImage);
             })
             .AddEndpointFilter<ValidationFilter<UpdateNameCommand>>()
@@ -92,10 +90,20 @@ public static class Images
                 [FromServices] IAddTagsHandler addTagsHandler, CancellationToken cancellationToken) =>
             {
                 var response = await addTagsHandler.AddAsync(id, addTagsCommand.Tags, cancellationToken);
-
                 return TypedResults.Ok(response);
             })
             .WithName("AddTag")
+            .WithTags("Tags")
+            .MapToApiVersion(1);
+
+        tags.MapDelete(pattern: "",
+                handler: async ([FromRoute] ImageId id, [FromQuery] string[] tag,
+                    [FromServices] IDeleteTagsHandler deleteTagsHandler, CancellationToken cancellationToken) =>
+                {
+                    await deleteTagsHandler.DeleteAsync(id, tag, cancellationToken);
+                    return TypedResults.Ok();
+                })
+            .WithName("DeleteTags")
             .WithTags("Tags")
             .MapToApiVersion(1);
 

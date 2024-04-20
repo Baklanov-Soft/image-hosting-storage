@@ -14,7 +14,7 @@ public static class ServiceCollectionExtensions
             .ValidateDataAnnotations();
 
         services.AddScoped<INewImageProducer, NewImageProducer>();
-        
+
         return services
             .AddTransient<IFileService, FileService>()
             .AddTransient<IFileUploadCommandFactory, FileUploadCommandFactory>()
@@ -25,6 +25,7 @@ public static class ServiceCollectionExtensions
             .AddTransient<IGetImageAssetHandler, GetImageAssetHandler>()
             .AddTransient<IGetImageHandler, GetImageHandler>()
             .AddTransient<IUpdateNameHandler, UpdateNameHandler>()
-            .AddTransient<IAddTagsHandler, AddTagsHandler>();
+            .AddTransient<IAddTagsHandler, AddTagsHandler>()
+            .AddTransient<IDeleteTagsHandler, DeleteTagsHandler>();
     }
 }
