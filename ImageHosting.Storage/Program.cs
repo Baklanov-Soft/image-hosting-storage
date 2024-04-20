@@ -15,6 +15,7 @@ using ImageHosting.Storage.OpenApi;
 using ImageHosting.Storage.Services;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
@@ -52,7 +53,7 @@ builder.Services.ConfigureOptions<NamedSwaggerGenOptions>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(Program));
 
 var newImagesTopicName = builder.Configuration["Kafka:NewImagesProducer:TopicName"];
-var bootstrapServers = builder.Configuration["Kafka:BootstrapServers"];
+var bootstrapServers = builder.Configuration.GetSection("Kafka:BootstrapServers").Get<string[]>();
 var categoriesTopicName = builder.Configuration["Kafka:CategoriesConsumer:TopicName"];
 var categoriesGroupId = builder.Configuration["Kafka:CategoriesConsumer:GroupId"];
 
