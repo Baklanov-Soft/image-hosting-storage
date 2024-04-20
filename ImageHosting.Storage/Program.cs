@@ -5,12 +5,13 @@ using Hellang.Middleware.ProblemDetails.Mvc;
 using ImageHosting.Persistence.DbContexts;
 using ImageHosting.Persistence.Extensions.DependencyInjection;
 using ImageHosting.Persistence.ValueTypes;
-using ImageHosting.Storage;
 using ImageHosting.Storage.Extensions.DependencyInjection;
 using ImageHosting.Storage.Features.Images.Endpoints;
 using ImageHosting.Storage.Features.Images.Extensions;
+using ImageHosting.Storage.Features.Images.Models;
 using ImageHosting.Storage.OpenApi;
 using ImageHosting.Storage.Services;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -37,7 +38,7 @@ builder.Services.AddImageServices();
 builder.Services.AddImageHostingDbContext("ImageHosting");
 ProblemDetailsExtensions.AddProblemDetails(builder.Services)
     .AddProblemDetailsConventions();
-builder.Services.AddKafkaServices();
+builder.Services.AddKafkaOptions();
 builder.Services.AddInitializeUserBucket();
 builder.Services.AddApiVersioning()
     .AddApiExplorer(options =>
@@ -47,7 +48,25 @@ builder.Services.AddApiVersioning()
     });
 builder.Services.ConfigureOptions<NamedSwaggerGenOptions>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(Program));
-builder.Services.AddHostedService<ImageTaggingWorker>();
+
+var newImagesTopicName = builder.Configuration["Kafka:NewImagesProducer:TopicName"];
+var bootstrapServers = builder.Configuration["Kafka:BootstrapServers"];
+
+builder.Services.AddMassTransit(massTransit =>
+{
+    massTransit.UsingInMemory();
+
+    massTransit.AddRider(rider =>
+    {
+        rider.AddProducer<NewImage>(newImagesTopicName);
+
+        rider.UsingKafka((context, kafka) =>
+        {
+            kafka.Host(bootstrapServers);
+        });
+    });
+});
+
 
 var app = builder.Build();
 
