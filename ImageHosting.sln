@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage", "ImageHosting.Storage\ImageHosting.Storage.csproj", "{39C30E75-601C-404C-BC00-4BAD9A926C35}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.WebApi", "ImageHosting.Storage.WebApi\ImageHosting.Storage.WebApi.csproj", "{39C30E75-601C-404C-BC00-4BAD9A926C35}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2E3ED63C-82E4-4F1D-8053-201A78C2DE9B}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,7 +17,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.UnitTests", "ImageHosting.Storage.UnitTests\ImageHosting.Storage.UnitTests.csproj", "{56562A88-B4D7-43FD-948C-927A1DA6DDB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Persistence", "ImageHosting.Persistence\ImageHosting.Persistence.csproj", "{4D2A4C6C-755A-42AA-8366-C8B39564DA37}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.Tagger", "ImageHosting.Storage.Tagger\ImageHosting.Storage.Tagger.csproj", "{F3136087-107F-4BBB-9A81-D7B862A30D7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.Domain", "ImageHosting.Storage.Domain\ImageHosting.Storage.Domain.csproj", "{001EE180-1F08-4F4A-8EC9-72EB8D97455A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.Infrastructure", "ImageHosting.Storage.Infrastructure\ImageHosting.Storage.Infrastructure.csproj", "{A51FF7EE-88AD-4C7F-905A-B8E78556B3EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +37,17 @@ Global
 		{56562A88-B4D7-43FD-948C-927A1DA6DDB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56562A88-B4D7-43FD-948C-927A1DA6DDB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56562A88-B4D7-43FD-948C-927A1DA6DDB9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4D2A4C6C-755A-42AA-8366-C8B39564DA37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4D2A4C6C-755A-42AA-8366-C8B39564DA37}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4D2A4C6C-755A-42AA-8366-C8B39564DA37}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4D2A4C6C-755A-42AA-8366-C8B39564DA37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3136087-107F-4BBB-9A81-D7B862A30D7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3136087-107F-4BBB-9A81-D7B862A30D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3136087-107F-4BBB-9A81-D7B862A30D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3136087-107F-4BBB-9A81-D7B862A30D7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{001EE180-1F08-4F4A-8EC9-72EB8D97455A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{001EE180-1F08-4F4A-8EC9-72EB8D97455A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{001EE180-1F08-4F4A-8EC9-72EB8D97455A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{001EE180-1F08-4F4A-8EC9-72EB8D97455A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A51FF7EE-88AD-4C7F-905A-B8E78556B3EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A51FF7EE-88AD-4C7F-905A-B8E78556B3EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A51FF7EE-88AD-4C7F-905A-B8E78556B3EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A51FF7EE-88AD-4C7F-905A-B8E78556B3EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
