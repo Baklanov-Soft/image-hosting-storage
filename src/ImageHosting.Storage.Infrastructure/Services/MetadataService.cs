@@ -3,10 +3,11 @@ using ImageHosting.Storage.Application.Services;
 using ImageHosting.Storage.Domain.ValueTypes;
 using ImageHosting.Storage.Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ImageHosting.Storage.Infrastructure.Services;
 
-public class MetadataService(IImageHostingDbContext dbContext) : IMetadataService
+public class MetadataService(IImageHostingDbContext dbContext, ILogger<MetadataService> logger) : IMetadataService
 {
     public async Task<ImageUploadedDto> WriteMetadataAsync(ImageMetadataDto imageMetadataDto,
         CancellationToken cancellationToken = default)
@@ -15,15 +16,17 @@ public class MetadataService(IImageHostingDbContext dbContext) : IMetadataServic
         dbContext.Images.Add(entity);
         await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
+        logger.LogMetadataWritten(entity.Id);
         return ImageUploadedDto.From(entity);
     }
 
-    public async Task<bool> DeleteMetadataAsync(ImageId id, CancellationToken cancellationToken = default)
+    public async Task DeleteMetadataAsync(ImageId id, CancellationToken cancellationToken = default)
     {
-        var rowsAffected = await dbContext.Images
+        await dbContext.Images
             .Where(i => i.Id == id)
             .ExecuteDeleteAsync(cancellationToken)
             .ConfigureAwait(false);
-        return rowsAffected == 1;
+        
+        logger.LogMetadataDeleted(id);
     }
 }

@@ -23,12 +23,13 @@
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.4" />
         <PackageReference Include="Minio" Version="6.0.2" />
+        <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ImageHosting.Storage.Application\ImageHosting.Storage.Application.csproj" />
-      <ProjectReference Include="..\ImageHosting.Storage.Infrastructure\ImageHosting.Storage.Infrastructure.csproj" />
+        <ProjectReference Include="..\ImageHosting.Storage.Application\ImageHosting.Storage.Application.csproj" />
+        <ProjectReference Include="..\ImageHosting.Storage.Infrastructure\ImageHosting.Storage.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
