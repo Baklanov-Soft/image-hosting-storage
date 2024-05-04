@@ -1,10 +1,8 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using ImageHosting.Storage.Application.Services;
 using Minio;
 using Minio.DataModel.Args;
 
-namespace ImageHosting.Storage.WebApi.Services;
+namespace ImageHosting.Storage.Infrastructure.Services;
 
 public class InitializeUserBucket(IMinioClient minioClient) : IInitializeUserBucket
 {

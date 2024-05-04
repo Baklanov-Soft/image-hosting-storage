@@ -4,7 +4,6 @@ using ImageHosting.Storage.Application.Services;
 using ImageHosting.Storage.Domain.Common;
 using ImageHosting.Storage.Domain.Messages;
 using ImageHosting.Storage.Domain.ValueTypes;
-using ImageHosting.Storage.WebApi.Models;
 
 namespace ImageHosting.Storage.WebApi.Features.Images.Services;
 

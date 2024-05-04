@@ -53,4 +53,9 @@ public static class ServiceCollectionExtensions
             .AddTransient<IFileService, FileService>()
             .AddTransient<IMetadataService, MetadataService>();
     }
+
+    public static IServiceCollection AddInitializeUserBucket(this IServiceCollection services)
+    {
+        return services.AddScoped<IInitializeUserBucket, InitializeUserBucket>();
+    }
 }

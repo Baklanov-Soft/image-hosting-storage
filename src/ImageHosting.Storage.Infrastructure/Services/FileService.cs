@@ -4,6 +4,7 @@ using ImageHosting.Storage.Application.Services;
 using ImageHosting.Storage.Infrastructure.Extensions;
 using Minio;
 using Minio.DataModel.Args;
+using Minio.Exceptions;
 
 namespace ImageHosting.Storage.Infrastructure.Services;
 
@@ -20,11 +21,8 @@ public class FileService(IMinioClient minioClient) : IFileService
             throw new UserBucketDoesNotExistsException(writeFileDto.UserId);
         }
 
-        var statObjectArgs = new StatObjectArgs()
-            .WithBucket(writeFileDto.UserId)
-            .WithObject(writeFileDto.ImageId);
-        var objectStat = await minioClient.StatObjectAsync(statObjectArgs, cancellationToken).ConfigureAwait(false);
-        if (objectStat.Size > 0)
+        var isObjectExists = await IsObjectExistsAsync(writeFileDto.UserId, writeFileDto.ImageId, cancellationToken);
+        if (isObjectExists)
         {
             throw new ImageObjectAlreadyExistsException(writeFileDto.UserId, writeFileDto.ImageId);
         }
@@ -40,6 +38,24 @@ public class FileService(IMinioClient minioClient) : IFileService
             await minioClient.PutObjectAsync(putObjectArgs, cancellationToken).ConfigureAwait(false);
 
         return putObjectResponse.ToDto();
+    }
+
+    private async Task<bool> IsObjectExistsAsync(string bucketId, string objectName,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var statObjectArgs = new StatObjectArgs()
+                .WithBucket(bucketId)
+                .WithObject(objectName);
+            _ = await minioClient.StatObjectAsync(statObjectArgs, cancellationToken).ConfigureAwait(false);
+
+            return true;
+        }
+        catch (ObjectNotFoundException)
+        {
+            return false;
+        }
     }
 
     public async Task RemoveFileAsync(RemoveFileDto removeFileDto, CancellationToken cancellationToken = default)

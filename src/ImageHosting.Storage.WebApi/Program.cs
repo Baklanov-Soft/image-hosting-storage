@@ -2,15 +2,14 @@ using Asp.Versioning;
 using FluentValidation;
 using Hellang.Middleware.ProblemDetails;
 using Hellang.Middleware.ProblemDetails.Mvc;
+using ImageHosting.Storage.Application.Services;
 using ImageHosting.Storage.Domain.Messages;
 using ImageHosting.Storage.Domain.ValueTypes;
 using ImageHosting.Storage.Infrastructure.DbContexts;
 using ImageHosting.Storage.Infrastructure.Extensions.DependencyInjection;
-using ImageHosting.Storage.WebApi.Extensions.DependencyInjection;
 using ImageHosting.Storage.WebApi.Features.Images.Endpoints;
 using ImageHosting.Storage.WebApi.Features.Images.Extensions;
 using ImageHosting.Storage.WebApi.OpenApi;
-using ImageHosting.Storage.WebApi.Services;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -39,7 +38,6 @@ builder.Services.AddImageServices();
 builder.Services.AddImageHostingDbContext("ImageHosting");
 ProblemDetailsExtensions.AddProblemDetails(builder.Services)
     .AddProblemDetailsConventions();
-builder.Services.AddKafkaOptions();
 builder.Services.AddInitializeUserBucket();
 builder.Services.AddApiVersioning()
     .AddApiExplorer(options =>
@@ -49,6 +47,7 @@ builder.Services.AddApiVersioning()
     });
 builder.Services.ConfigureOptions<NamedSwaggerGenOptions>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(Program));
+builder.Services.AddInfrastructureServices();
 
 var newImagesTopicName = builder.Configuration["Kafka:NewImagesProducer:TopicName"];
 var bootstrapServers = builder.Configuration.GetSection("Kafka:BootstrapServers").Get<string[]>();

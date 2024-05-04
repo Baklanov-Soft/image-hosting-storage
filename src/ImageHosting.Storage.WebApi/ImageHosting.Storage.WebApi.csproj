@@ -31,8 +31,4 @@
       <ProjectReference Include="..\ImageHosting.Storage.Infrastructure\ImageHosting.Storage.Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Exceptions\" />
-    </ItemGroup>
-
 </Project>

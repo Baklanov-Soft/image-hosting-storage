@@ -1,7 +1,4 @@
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace ImageHosting.Storage.WebApi.Services;
+namespace ImageHosting.Storage.Application.Services;
 
 public interface IInitializeUserBucket
 {

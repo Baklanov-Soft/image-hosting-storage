@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ImageHosting.Storage.WebApi.Models;
+namespace ImageHosting.Storage.WebApi.Options;
 
 public class ImagesOptions
 {

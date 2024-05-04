@@ -6,7 +6,7 @@ using ImageHosting.Storage.Infrastructure.DbContexts;
 using ImageHosting.Storage.WebApi.Features.Images.Exceptions;
 using ImageHosting.Storage.WebApi.Features.Images.Extensions;
 using ImageHosting.Storage.WebApi.Features.Images.Models;
-using ImageHosting.Storage.WebApi.Models;
+using ImageHosting.Storage.WebApi.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
