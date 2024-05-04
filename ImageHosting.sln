@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.WebApi", "ImageHosting.Storage.WebApi\ImageHosting.Storage.WebApi.csproj", "{39C30E75-601C-404C-BC00-4BAD9A926C35}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2E3ED63C-82E4-4F1D-8053-201A78C2DE9B}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
@@ -15,13 +13,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.UnitTests", "ImageHosting.Storage.UnitTests\ImageHosting.Storage.UnitTests.csproj", "{56562A88-B4D7-43FD-948C-927A1DA6DDB9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1C68230E-D545-4C68-BA8B-22C4477501AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.Tagger", "ImageHosting.Storage.Tagger\ImageHosting.Storage.Tagger.csproj", "{F3136087-107F-4BBB-9A81-D7B862A30D7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.Application", "src\ImageHosting.Storage.Application\ImageHosting.Storage.Application.csproj", "{005586CB-F9A6-469C-B436-2228A8B622AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.Domain", "ImageHosting.Storage.Domain\ImageHosting.Storage.Domain.csproj", "{001EE180-1F08-4F4A-8EC9-72EB8D97455A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.Domain", "src\ImageHosting.Storage.Domain\ImageHosting.Storage.Domain.csproj", "{7255725A-9A01-4C84-B49D-FD5620802000}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.Infrastructure", "ImageHosting.Storage.Infrastructure\ImageHosting.Storage.Infrastructure.csproj", "{A51FF7EE-88AD-4C7F-905A-B8E78556B3EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.WebApi", "src\ImageHosting.Storage.WebApi\ImageHosting.Storage.WebApi.csproj", "{2ED37173-F78E-4BA0-8B13-BA053C6A1D8D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A0656636-411F-44D8-A5C1-6BB3F4119A87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.Infrastructure", "src\ImageHosting.Storage.Infrastructure\ImageHosting.Storage.Infrastructure.csproj", "{ECDE7380-A8D3-4668-92A7-20FBECC102D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.UnitTests", "tests\ImageHosting.Storage.UnitTests\ImageHosting.Storage.UnitTests.csproj", "{D4D379BB-8C73-47FA-87D8-44F90F05DF37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.Tagger", "src\ImageHosting.Storage.Tagger\ImageHosting.Storage.Tagger.csproj", "{93B10A38-1C7E-4F66-8447-ED42FEAE7352}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,25 +35,37 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{39C30E75-601C-404C-BC00-4BAD9A926C35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{39C30E75-601C-404C-BC00-4BAD9A926C35}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{39C30E75-601C-404C-BC00-4BAD9A926C35}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{39C30E75-601C-404C-BC00-4BAD9A926C35}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56562A88-B4D7-43FD-948C-927A1DA6DDB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56562A88-B4D7-43FD-948C-927A1DA6DDB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56562A88-B4D7-43FD-948C-927A1DA6DDB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56562A88-B4D7-43FD-948C-927A1DA6DDB9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F3136087-107F-4BBB-9A81-D7B862A30D7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F3136087-107F-4BBB-9A81-D7B862A30D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F3136087-107F-4BBB-9A81-D7B862A30D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F3136087-107F-4BBB-9A81-D7B862A30D7A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{001EE180-1F08-4F4A-8EC9-72EB8D97455A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{001EE180-1F08-4F4A-8EC9-72EB8D97455A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{001EE180-1F08-4F4A-8EC9-72EB8D97455A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{001EE180-1F08-4F4A-8EC9-72EB8D97455A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A51FF7EE-88AD-4C7F-905A-B8E78556B3EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A51FF7EE-88AD-4C7F-905A-B8E78556B3EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A51FF7EE-88AD-4C7F-905A-B8E78556B3EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A51FF7EE-88AD-4C7F-905A-B8E78556B3EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{005586CB-F9A6-469C-B436-2228A8B622AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{005586CB-F9A6-469C-B436-2228A8B622AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{005586CB-F9A6-469C-B436-2228A8B622AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{005586CB-F9A6-469C-B436-2228A8B622AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7255725A-9A01-4C84-B49D-FD5620802000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7255725A-9A01-4C84-B49D-FD5620802000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7255725A-9A01-4C84-B49D-FD5620802000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7255725A-9A01-4C84-B49D-FD5620802000}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2ED37173-F78E-4BA0-8B13-BA053C6A1D8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2ED37173-F78E-4BA0-8B13-BA053C6A1D8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2ED37173-F78E-4BA0-8B13-BA053C6A1D8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2ED37173-F78E-4BA0-8B13-BA053C6A1D8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECDE7380-A8D3-4668-92A7-20FBECC102D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECDE7380-A8D3-4668-92A7-20FBECC102D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECDE7380-A8D3-4668-92A7-20FBECC102D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECDE7380-A8D3-4668-92A7-20FBECC102D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4D379BB-8C73-47FA-87D8-44F90F05DF37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4D379BB-8C73-47FA-87D8-44F90F05DF37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4D379BB-8C73-47FA-87D8-44F90F05DF37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4D379BB-8C73-47FA-87D8-44F90F05DF37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93B10A38-1C7E-4F66-8447-ED42FEAE7352}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93B10A38-1C7E-4F66-8447-ED42FEAE7352}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93B10A38-1C7E-4F66-8447-ED42FEAE7352}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93B10A38-1C7E-4F66-8447-ED42FEAE7352}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{005586CB-F9A6-469C-B436-2228A8B622AD} = {1C68230E-D545-4C68-BA8B-22C4477501AD}
+		{7255725A-9A01-4C84-B49D-FD5620802000} = {1C68230E-D545-4C68-BA8B-22C4477501AD}
+		{2ED37173-F78E-4BA0-8B13-BA053C6A1D8D} = {1C68230E-D545-4C68-BA8B-22C4477501AD}
+		{ECDE7380-A8D3-4668-92A7-20FBECC102D1} = {1C68230E-D545-4C68-BA8B-22C4477501AD}
+		{D4D379BB-8C73-47FA-87D8-44F90F05DF37} = {A0656636-411F-44D8-A5C1-6BB3F4119A87}
+		{93B10A38-1C7E-4F66-8447-ED42FEAE7352} = {1C68230E-D545-4C68-BA8B-22C4477501AD}
 	EndGlobalSection
 EndGlobal
