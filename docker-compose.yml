@@ -6,9 +6,11 @@
       context: .
       dockerfile: Dockerfile
     environment:
-      Logging__LogLevel__Default: Information
-      Logging__LogLevel__Microsoft.AspNetCore: Warning
-      Logging__LogLevel__Microsoft.EntityFrameworkCore: Warning
+      Serilog__Using__0: "Serilog.Sinks.Console"
+      Serilog__MinimumLevel__Default: Information
+      Serilog__MinimumLevel__Override__Microsoft.AspNetCore: Warning
+      Serilog__MinimumLevel__Override__Microsoft.EntityFrameworkCore: Warning
+      Serilog__WriteTo__0__Name: Console
       Minio__Endpoint: minio:9000
       Minio__AccessKey: minioadmin
       Minio__SecretKey: minioadmin
