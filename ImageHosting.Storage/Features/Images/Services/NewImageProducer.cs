@@ -1,14 +1,18 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ImageHosting.Storage.Features.Images.Models;
+using ImageHosting.Storage.Logging;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 
 namespace ImageHosting.Storage.Features.Images.Services;
 
-public class NewImageProducer(ITopicProducer<NewImage> messageProducer) : INewImageProducer
+public class NewImageProducer(ITopicProducer<NewImage> messageProducer, ILogger<NewImageProducer> logger)
+    : INewImageProducer
 {
-    public Task SendAsync(NewImage newImage, CancellationToken cancellationToken = default)
+    public async Task SendAsync(NewImage newImage, CancellationToken cancellationToken = default)
     {
-        return messageProducer.Produce(newImage, cancellationToken);
+        await messageProducer.Produce(newImage, cancellationToken);
+        logger.LogMessagePublished(newImage.ImageId, newImage.BucketId);
     }
 }

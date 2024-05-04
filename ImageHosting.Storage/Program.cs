@@ -1,3 +1,4 @@
+using System;
 using Asp.Versioning;
 using Confluent.Kafka;
 using FluentValidation;
@@ -19,104 +20,120 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+try
 {
-    options.MapType<UserId>(() => new OpenApiSchema
+    var builder = WebApplication.CreateBuilder(args);
+    
+    Log.Logger = new LoggerConfiguration()
+        .ReadFrom.Configuration(builder.Configuration)
+        .CreateLogger();
+    builder.Services.AddSerilog();
+    
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen(options =>
     {
-        Type = "string",
-        Format = "uuid"
-    });
-    options.MapType<ImageId>(() => new OpenApiSchema
-    {
-        Type = "string",
-        Format = "uuid"
-    });
-});
-builder.Services.AddMinioServices();
-builder.Services.AddImageServices();
-builder.Services.AddImageHostingDbContext("ImageHosting");
-ProblemDetailsExtensions.AddProblemDetails(builder.Services)
-    .AddProblemDetailsConventions();
-builder.Services.AddKafkaOptions();
-builder.Services.AddInitializeUserBucket();
-builder.Services.AddApiVersioning()
-    .AddApiExplorer(options =>
-    {
-        options.GroupNameFormat = "'v'V";
-        options.SubstituteApiVersionInUrl = true;
-    });
-builder.Services.ConfigureOptions<NamedSwaggerGenOptions>();
-builder.Services.AddValidatorsFromAssemblyContaining(typeof(Program));
-
-var newImagesTopicName = builder.Configuration["Kafka:NewImagesProducer:TopicName"];
-var bootstrapServers = builder.Configuration.GetSection("Kafka:BootstrapServers").Get<string[]>();
-var categoriesTopicName = builder.Configuration["Kafka:CategoriesConsumer:TopicName"];
-var categoriesGroupId = builder.Configuration["Kafka:CategoriesConsumer:GroupId"];
-
-builder.Services.AddMassTransit(massTransit =>
-{
-    massTransit.UsingInMemory();
-
-    massTransit.AddRider(rider =>
-    {
-        rider.AddProducer<NewImage>(newImagesTopicName);
-        rider.AddConsumer<AssignTagsConsumer>(consumerDefinitionType: typeof(AssignTagsConsumerDefinition));
-
-        rider.UsingKafka((context, kafka) =>
+        options.MapType<UserId>(() => new OpenApiSchema
         {
-            kafka.Host(bootstrapServers);
-            kafka.TopicEndpoint<CategorizedNewImage>(categoriesTopicName, categoriesGroupId, endpoint =>
+            Type = "string",
+            Format = "uuid"
+        });
+        options.MapType<ImageId>(() => new OpenApiSchema
+        {
+            Type = "string",
+            Format = "uuid"
+        });
+    });
+    builder.Services.AddMinioServices();
+    builder.Services.AddImageServices();
+    builder.Services.AddImageHostingDbContext("ImageHosting");
+    ProblemDetailsExtensions.AddProblemDetails(builder.Services)
+        .AddProblemDetailsConventions();
+    builder.Services.AddKafkaOptions();
+    builder.Services.AddInitializeUserBucket();
+    builder.Services.AddApiVersioning()
+        .AddApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'V";
+            options.SubstituteApiVersionInUrl = true;
+        });
+    builder.Services.ConfigureOptions<NamedSwaggerGenOptions>();
+    builder.Services.AddValidatorsFromAssemblyContaining(typeof(Program));
+    
+    var newImagesTopicName = builder.Configuration["Kafka:NewImagesProducer:TopicName"];
+    var bootstrapServers = builder.Configuration.GetSection("Kafka:BootstrapServers").Get<string[]>();
+    var categoriesTopicName = builder.Configuration["Kafka:CategoriesConsumer:TopicName"];
+    var categoriesGroupId = builder.Configuration["Kafka:CategoriesConsumer:GroupId"];
+
+    builder.Services.AddMassTransit(massTransit =>
+    {
+        massTransit.UsingInMemory();
+
+        massTransit.AddRider(rider =>
+        {
+            rider.AddProducer<NewImage>(newImagesTopicName);
+            rider.AddConsumer<AssignTagsConsumer>(consumerDefinitionType: typeof(AssignTagsConsumerDefinition));
+
+            rider.UsingKafka((context, kafka) =>
             {
-                endpoint.ConfigureConsumer<AssignTagsConsumer>(context);
-                endpoint.AutoOffsetReset = AutoOffsetReset.Earliest;
-                endpoint.ConcurrentDeliveryLimit = 10;
+                kafka.Host(bootstrapServers);
+                kafka.TopicEndpoint<CategorizedNewImage>(categoriesTopicName, categoriesGroupId, endpoint =>
+                {
+                    endpoint.ConfigureConsumer<AssignTagsConsumer>(context);
+                    endpoint.AutoOffsetReset = AutoOffsetReset.Earliest;
+                    endpoint.ConcurrentDeliveryLimit = 10;
+                });
             });
         });
     });
-});
+    
+    var app = builder.Build();
 
+    app.UseProblemDetails();
 
-var app = builder.Build();
+    var apiVersionSet = app.NewApiVersionSet()
+        .HasApiVersion(new ApiVersion(1))
+        .Build();
 
-app.UseProblemDetails();
+    app.MapGroup("api/v{v:apiVersion}")
+        .WithApiVersionSet(apiVersionSet)
+        .MapImagesEndpoints();
 
-var apiVersionSet = app.NewApiVersionSet()
-    .HasApiVersion(new ApiVersion(1))
-    .Build();
-
-app.MapGroup("api/v{v:apiVersion}")
-    .WithApiVersionSet(apiVersionSet)
-    .MapImagesEndpoints();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
+    if (app.Environment.IsDevelopment())
     {
-        foreach (var description in app.DescribeApiVersions())
+        app.UseSwagger();
+        app.UseSwaggerUI(options =>
         {
-            var url = $"/swagger/{description.GroupName}/swagger.json";
-            var name = description.GroupName.ToUpperInvariant();
+            foreach (var description in app.DescribeApiVersions())
+            {
+                var url = $"/swagger/{description.GroupName}/swagger.json";
+                var name = description.GroupName.ToUpperInvariant();
 
-            options.SwaggerEndpoint(url, name);
-        }
-    });
+                options.SwaggerEndpoint(url, name);
+            }
+        });
+    }
+    
+    using (var serviceScope = app.Services.CreateScope())
+    {
+        var dbContext = serviceScope.ServiceProvider.GetRequiredService<IImageHostingDbContext>();
+        dbContext.Migrate();
+    }
+
+    using (var serviceScope = app.Services.CreateScope())
+    {
+        var initializeUserBucket = serviceScope.ServiceProvider.GetRequiredService<IInitializeUserBucket>();
+        await initializeUserBucket.CreateDefaultAsync();
+    }
+
+    app.Run();
 }
-
-using (var serviceScope = app.Services.CreateScope())
+catch (Exception ex)
 {
-    var dbContext = serviceScope.ServiceProvider.GetRequiredService<IImageHostingDbContext>();
-    dbContext.Migrate();
+    Log.Fatal(ex, "Application terminated unexpectedly");
 }
-
-using (var serviceScope = app.Services.CreateScope())
+finally
 {
-    var initializeUserBucket = serviceScope.ServiceProvider.GetRequiredService<IInitializeUserBucket>();
-    await initializeUserBucket.CreateDefaultAsync();
+    Log.CloseAndFlush();
 }
-
-app.Run();

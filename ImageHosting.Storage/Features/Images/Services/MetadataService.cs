@@ -4,11 +4,13 @@ using System.Threading.Tasks;
 using ImageHosting.Persistence.DbContexts;
 using ImageHosting.Persistence.ValueTypes;
 using ImageHosting.Storage.Features.Images.Models;
+using ImageHosting.Storage.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ImageHosting.Storage.Features.Images.Services;
 
-public class MetadataService(IImageHostingDbContext dbContext) : IMetadataService
+public class MetadataService(IImageHostingDbContext dbContext, ILogger<MetadataService> logger) : IMetadataService
 {
     public async Task<ImageUploadedResponse> WriteMetadataAsync(ImageMetadata imageMetadata,
         CancellationToken cancellationToken = default)
@@ -17,15 +19,17 @@ public class MetadataService(IImageHostingDbContext dbContext) : IMetadataServic
         dbContext.Images.Add(entity);
         await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
+        logger.LogMetadataWritten(entity.Id);
         return ImageUploadedResponse.From(entity);
     }
 
-    public async Task<bool> DeleteMetadataAsync(ImageId id, CancellationToken cancellationToken = default)
+    public async Task DeleteMetadataAsync(ImageId id, CancellationToken cancellationToken = default)
     {
-        var rowsAffected = await dbContext.Images
+        await dbContext.Images
             .Where(i => i.Id == id)
             .ExecuteDeleteAsync(cancellationToken)
             .ConfigureAwait(false);
-        return rowsAffected == 1;
+        
+        logger.LogMetadataDeleted(id);
     }
 }
