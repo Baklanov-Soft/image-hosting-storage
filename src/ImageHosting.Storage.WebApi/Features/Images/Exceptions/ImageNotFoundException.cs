@@ -1,5 +1,3 @@
-using System;
-
 namespace ImageHosting.Storage.WebApi.Features.Images.Exceptions;
 
 public class ImageNotFoundException(string bucketName, string imageName)

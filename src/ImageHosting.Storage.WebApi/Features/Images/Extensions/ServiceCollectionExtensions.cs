@@ -1,7 +1,6 @@
 using ImageHosting.Storage.WebApi.Features.Images.Handlers;
 using ImageHosting.Storage.WebApi.Features.Images.Services;
 using ImageHosting.Storage.WebApi.Options;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ImageHosting.Storage.WebApi.Features.Images.Extensions;
 

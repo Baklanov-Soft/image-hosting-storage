@@ -1,6 +1,3 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using ImageHosting.Storage.Domain.ValueTypes;
 using ImageHosting.Storage.Infrastructure.DbContexts;
 using ImageHosting.Storage.WebApi.Features.Images.Exceptions;

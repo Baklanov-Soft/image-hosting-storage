@@ -1,6 +1,3 @@
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using ImageHosting.Storage.Application.DTOs;
 using ImageHosting.Storage.Application.Services;
 using ImageHosting.Storage.Domain.Common;

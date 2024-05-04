@@ -8,5 +8,5 @@ public interface IMetadataService
     Task<ImageUploadedDto> WriteMetadataAsync(ImageMetadataDto imageMetadataDto,
         CancellationToken cancellationToken = default);
 
-    Task<bool> DeleteMetadataAsync(ImageId id, CancellationToken cancellationToken = default);
+    Task DeleteMetadataAsync(ImageId id, CancellationToken cancellationToken = default);
 }

@@ -11,10 +11,6 @@ using ImageHosting.Storage.WebApi.Features.Images.Endpoints;
 using ImageHosting.Storage.WebApi.Features.Images.Extensions;
 using ImageHosting.Storage.WebApi.OpenApi;
 using MassTransit;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
 

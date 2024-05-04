@@ -1,4 +1,3 @@
-using System;
 using ImageHosting.Storage.Domain.ValueTypes;
 
 namespace ImageHosting.Storage.WebApi.Features.Images.Exceptions;

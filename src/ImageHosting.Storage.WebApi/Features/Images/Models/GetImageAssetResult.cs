@@ -1,5 +1,3 @@
-using System.IO;
-
 namespace ImageHosting.Storage.WebApi.Features.Images.Models;
 
 public class GetImageAssetResult

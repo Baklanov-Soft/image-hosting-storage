@@ -1,11 +1,7 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using ImageHosting.Storage.Application.DTOs;
 using ImageHosting.Storage.Domain.Common;
 using ImageHosting.Storage.Domain.ValueTypes;
 using ImageHosting.Storage.WebApi.Features.Images.Services;
-using Microsoft.AspNetCore.Http;
 
 namespace ImageHosting.Storage.WebApi.Features.Images.Handlers;
 

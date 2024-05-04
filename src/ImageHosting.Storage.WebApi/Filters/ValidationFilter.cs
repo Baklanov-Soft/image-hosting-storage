@@ -1,9 +1,6 @@
-using System.Linq;
-using System.Threading.Tasks;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 
-namespace ImageHosting.Storage.WebApi.Http;
+namespace ImageHosting.Storage.WebApi.Filters;
 
 public class ValidationFilter<T>(IValidator<T> validator) : IEndpointFilter
 {

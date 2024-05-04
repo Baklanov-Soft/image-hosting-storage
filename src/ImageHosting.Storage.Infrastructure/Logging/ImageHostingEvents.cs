@@ -1,6 +1,6 @@
-namespace ImageHosting.Storage.Logging;
+namespace ImageHosting.Storage.Infrastructure.Logging;
 
-public static class WebApiEvents
+public static class ImageHostingEvents
 {
     public const int WriteFile = 1000;
     public const int WriteMetadata = 1001;

@@ -1,14 +1,9 @@
-using System;
 using System.Security.Claims;
-using System.Threading;
 using ImageHosting.Storage.Domain.ValueTypes;
 using ImageHosting.Storage.WebApi.Features.Images.Handlers;
 using ImageHosting.Storage.WebApi.Features.Images.Models;
-using ImageHosting.Storage.WebApi.Http;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+using ImageHosting.Storage.WebApi.Filters;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 
 namespace ImageHosting.Storage.WebApi.Features.Images.Endpoints;
 

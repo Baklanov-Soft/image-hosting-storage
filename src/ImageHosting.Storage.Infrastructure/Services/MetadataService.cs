@@ -2,6 +2,7 @@ using ImageHosting.Storage.Application.DTOs;
 using ImageHosting.Storage.Application.Services;
 using ImageHosting.Storage.Domain.ValueTypes;
 using ImageHosting.Storage.Infrastructure.DbContexts;
+using ImageHosting.Storage.Infrastructure.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

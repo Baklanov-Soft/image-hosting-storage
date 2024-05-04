@@ -2,13 +2,15 @@ using ImageHosting.Storage.Application.DTOs;
 using ImageHosting.Storage.Application.Exceptions;
 using ImageHosting.Storage.Application.Services;
 using ImageHosting.Storage.Infrastructure.Extensions;
+using ImageHosting.Storage.Infrastructure.Logging;
 using Minio;
 using Minio.DataModel.Args;
 using Minio.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace ImageHosting.Storage.Infrastructure.Services;
 
-public class FileService(IMinioClient minioClient) : IFileService
+public class FileService(IMinioClient minioClient, ILogger<FileService> logger) : IFileService
 {
     public async Task<UploadFileDto> WriteFileAsync(WriteFileDto writeFileDto,
         CancellationToken cancellationToken = default)
@@ -37,6 +39,7 @@ public class FileService(IMinioClient minioClient) : IFileService
         var putObjectResponse =
             await minioClient.PutObjectAsync(putObjectArgs, cancellationToken).ConfigureAwait(false);
 
+        logger.LogFileWritten(writeFileDto.ImageId, writeFileDto.UserId);
         return putObjectResponse.ToDto();
     }
 
@@ -72,5 +75,7 @@ public class FileService(IMinioClient minioClient) : IFileService
             .WithBucket(removeFileDto.UserId)
             .WithObject(removeFileDto.ImageId);
         await minioClient.RemoveObjectAsync(removeObjectArgs, cancellationToken).ConfigureAwait(false);
+
+        logger.LogFileRemoved(removeFileDto.ImageId, removeFileDto.UserId);
     }
 }

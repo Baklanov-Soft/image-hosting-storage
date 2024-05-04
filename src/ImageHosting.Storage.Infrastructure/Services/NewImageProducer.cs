@@ -1,5 +1,6 @@
 using ImageHosting.Storage.Application.Services;
 using ImageHosting.Storage.Domain.Messages;
+using ImageHosting.Storage.Infrastructure.Logging;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
