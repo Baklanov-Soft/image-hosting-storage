@@ -1,30 +1,20 @@
-﻿services:
-  image-hosting-storage:
-    container_name: image-hosting-storage
-    image: ghcr.io/baklanov-soft/image-hosting-storage:master
+services:
+  storage-webapi:
+    container_name: storage-webapi
+    image: ${DOCKER_REGISTRY-}image-hosting-storage-webapi
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: src/ImageHosting.Storage.WebApi/Dockerfile
     environment:
       Serilog__Using__0: "Serilog.Sinks.Console"
       Serilog__MinimumLevel__Default: Information
       Serilog__MinimumLevel__Override__Microsoft.AspNetCore: Warning
       Serilog__MinimumLevel__Override__Microsoft.EntityFrameworkCore: Warning
       Serilog__WriteTo__0__Name: Console
-      Minio__Endpoint: minio:9000
-      Minio__AccessKey: minioadmin
-      Minio__SecretKey: minioadmin
-      Minio__Secure: false
-      ConnectionStrings__ImageHosting: "Host=postgres;Port=5432;Database=image_hosting;Username=image_hosting;Password=P@ssw0rd;Include Error Detail=true"
-      ASPNETCORE_ENVIRONMENT: Development
       Kafka__BootstrapServers__0: kafka:9092
       Kafka__NewImagesProducer__TopicName: new-images.v1
-      Kafka__CategoriesConsumer__TopicName: categories.v1
-      Kafka__CategoriesConsumer__GroupId: image-tagger
-      Kafka__CategoriesConsumer__Threshold: 0.8
-      Images__BaseUri: "localhost:8080"
-    ports:
-      - "127.0.0.1:8080:8080"
+      Minio__Endpoint: minio:9000
+      Images__BaseUri: "http://localhost:8080"
     depends_on:
       - minio
       - postgres
@@ -32,35 +22,46 @@
       - kafka-init-new-images
       - kafka-init-categories
 
+  image-tagger:
+    container_name: image-tagger
+    image: ${DOCKER_REGISTRY-}image-hosting-storage-tagger
+    build:
+      context: .
+      dockerfile: src/ImageHosting.Storage.Tagger/Dockerfile
+    environment:
+      Logging__LogLevel__Default: Information
+      Logging__LogLevel__Microsoft.AspNetCore: Warning
+      Logging__LogLevel__Microsoft.EntityFrameworkCore: Warning
+      AssignTags__Threshold: 0.8
+      AssignTagsConsumer__BootstrapServers__0: kafka:9092
+      AssignTagsConsumer__TopicName: "categories.v1"
+      AssignTagsConsumer__GroupId: image-tagger
+    depends_on:
+      - postgres
+      - kafka
+      - kafka-init-categories
+      
   minio:
     container_name: minio
-    image: quay.io/minio/minio:RELEASE.2024-01-31T20-20-33Z
-    command: server --console-address ":9001" /data
+    image: quay.io/minio/minio:RELEASE.2024-09-13T20-26-02Z
     ports:
       - "127.0.0.1:9000:9000"
       - "127.0.0.1:9001:9001"
+    command: server --console-address ":9001" /data
     volumes:
       - minio-data:/data
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
   
   postgres:
     container_name: postgres
-    image: postgres:16-alpine3.18
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: image_hosting
-      POSTGRES_USER: image_hosting
-      POSTGRES_PASSWORD: P@ssw0rd
+    image: postgres:16.4-alpine3.20
     ports:
       - "127.0.0.1:5432:5432"
-    command: [ "postgres", "-c", "log_statement=all" ]
+    volumes:
+      - db-data:/var/lib/postgresql/data
 
   kafka:
     container_name: kafka
-    image: bitnami/kafka:3.6.1
+    image: bitnami/kafka:3.8
     ports:
       - "127.0.0.1:9094:9094"
     environment:
@@ -69,7 +70,6 @@
       KAFKA_CFG_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:9094
       KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      # cluster config
       KAFKA_KRAFT_CLUSTER_ID: LelM2dIFQkiUFvXCEcqRWA
       KAFKA_CFG_NODE_ID: 0
       KAFKA_CFG_PROCESS_ROLES: controller,broker
@@ -79,7 +79,7 @@
   
   kafka-init-new-images:
     container_name: kafka-init-new-images
-    image: bitnami/kafka:3.6.1
+    image: bitnami/kafka:3.8
     depends_on:
       - kafka
     entrypoint: "kafka-topics.sh"
@@ -93,7 +93,7 @@
   
   kafka-init-categories:
     container_name: kafka-init-categories
-    image: bitnami/kafka:3.6.1
+    image: bitnami/kafka:3.8
     depends_on:
       - kafka
     entrypoint: "kafka-topics.sh"
@@ -104,22 +104,19 @@
       "--partitions", "2",
       "--replication-factor", "1"
     ]
-
+    
   kafka-ui:
-    image: provectuslabs/kafka-ui:v0.7.2
     container_name: kafka-ui
-    ports:
-      - "127.0.0.1:8000:8000"
-    environment:
-      SERVER_PORT: 8000
-      KAFKA_CLUSTERS_0_NAME: image-hosting
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    image: provectuslabs/kafka-ui:v0.7.2
     depends_on:
       - kafka
-
+    environment:
+      KAFKA_CLUSTERS_0_NAME: image-hosting
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      
   resizer:
-    image: ghcr.io/baklanov-soft/image-hosting-processing-resizer:master
     container_name: resizer
+    image: ghcr.io/baklanov-soft/image-hosting-processing-resizer:master
     depends_on:
       - kafka-init-new-images
       - minio
@@ -127,12 +124,10 @@
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       CONSUMER_GROUP_ID: resizer-local-test
       MINIO_HOST: "http://minio:9000"
-      MINIO_USER: minioadmin
-      MINIO_PASSWORD: minioadmin
-
+      
   recognizer:
-    image: ghcr.io/baklanov-soft/image-hosting-processing-recognizer:master
     container_name: recognizer
+    image: ghcr.io/baklanov-soft/image-hosting-processing-recognizer:master
     depends_on:
       - kafka-init-new-images
       - kafka-init-categories
@@ -151,9 +146,7 @@
       NSFW_SYNSET_PATH: "nsfw/synset.txt"
       NSFW_MODEL_PATH: "nsfw/nsfw_model.pt"
       MINIO_HOST: "http://minio:9000"
-      MINIO_USER: minioadmin
-      MINIO_PASSWORD: minioadmin
-      DEBUG_CATEGORIES: true
+
 
 volumes:
   minio-data:

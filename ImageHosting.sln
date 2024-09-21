@@ -1,33 +1,25 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2E3ED63C-82E4-4F1D-8053-201A78C2DE9B}"
-	ProjectSection(SolutionItems) = preProject
-		docker-compose.yml = docker-compose.yml
-		.config\dotnet-tools.json = .config\dotnet-tools.json
-		.github\workflows\publish-container.yml = .github\workflows\publish-container.yml
-		.github\CODEOWNERS = .github\CODEOWNERS
-		.dockerignore = .dockerignore
-		Dockerfile = Dockerfile
-		.github\workflows\codecov.yml = .github\workflows\codecov.yml
-		global.json = global.json
-		.gitignore = .gitignore
-	EndProjectSection
-EndProject
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1C68230E-D545-4C68-BA8B-22C4477501AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.Application", "src\ImageHosting.Storage.Application\ImageHosting.Storage.Application.csproj", "{005586CB-F9A6-469C-B436-2228A8B622AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageHosting.Storage.Application", "src\ImageHosting.Storage.Application\ImageHosting.Storage.Application.csproj", "{005586CB-F9A6-469C-B436-2228A8B622AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.Domain", "src\ImageHosting.Storage.Domain\ImageHosting.Storage.Domain.csproj", "{7255725A-9A01-4C84-B49D-FD5620802000}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageHosting.Storage.Domain", "src\ImageHosting.Storage.Domain\ImageHosting.Storage.Domain.csproj", "{7255725A-9A01-4C84-B49D-FD5620802000}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.WebApi", "src\ImageHosting.Storage.WebApi\ImageHosting.Storage.WebApi.csproj", "{2ED37173-F78E-4BA0-8B13-BA053C6A1D8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageHosting.Storage.WebApi", "src\ImageHosting.Storage.WebApi\ImageHosting.Storage.WebApi.csproj", "{2ED37173-F78E-4BA0-8B13-BA053C6A1D8D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A0656636-411F-44D8-A5C1-6BB3F4119A87}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.Infrastructure", "src\ImageHosting.Storage.Infrastructure\ImageHosting.Storage.Infrastructure.csproj", "{ECDE7380-A8D3-4668-92A7-20FBECC102D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageHosting.Storage.Infrastructure", "src\ImageHosting.Storage.Infrastructure\ImageHosting.Storage.Infrastructure.csproj", "{ECDE7380-A8D3-4668-92A7-20FBECC102D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.UnitTests", "tests\ImageHosting.Storage.UnitTests\ImageHosting.Storage.UnitTests.csproj", "{D4D379BB-8C73-47FA-87D8-44F90F05DF37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageHosting.Storage.UnitTests", "tests\ImageHosting.Storage.UnitTests\ImageHosting.Storage.UnitTests.csproj", "{D4D379BB-8C73-47FA-87D8-44F90F05DF37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHosting.Storage.Tagger", "src\ImageHosting.Storage.Tagger\ImageHosting.Storage.Tagger.csproj", "{93B10A38-1C7E-4F66-8447-ED42FEAE7352}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageHosting.Storage.Tagger", "src\ImageHosting.Storage.Tagger\ImageHosting.Storage.Tagger.csproj", "{93B10A38-1C7E-4F66-8447-ED42FEAE7352}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3E719B58-4503-4001-A20D-57698BB768DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +51,13 @@ Global
 		{93B10A38-1C7E-4F66-8447-ED42FEAE7352}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93B10A38-1C7E-4F66-8447-ED42FEAE7352}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93B10A38-1C7E-4F66-8447-ED42FEAE7352}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E719B58-4503-4001-A20D-57698BB768DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E719B58-4503-4001-A20D-57698BB768DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E719B58-4503-4001-A20D-57698BB768DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E719B58-4503-4001-A20D-57698BB768DB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{005586CB-F9A6-469C-B436-2228A8B622AD} = {1C68230E-D545-4C68-BA8B-22C4477501AD}
@@ -67,5 +66,8 @@ Global
 		{ECDE7380-A8D3-4668-92A7-20FBECC102D1} = {1C68230E-D545-4C68-BA8B-22C4477501AD}
 		{D4D379BB-8C73-47FA-87D8-44F90F05DF37} = {A0656636-411F-44D8-A5C1-6BB3F4119A87}
 		{93B10A38-1C7E-4F66-8447-ED42FEAE7352} = {1C68230E-D545-4C68-BA8B-22C4477501AD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B7A8C6A9-84B2-4C15-8C65-4C81799CC918}
 	EndGlobalSection
 EndGlobal

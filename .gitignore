@@ -4,6 +4,7 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 .idea/
-*.sln.DotSettings.user
+*.user
 *.opencover.xml
 /recognizer
+.vs/
