@@ -1,0 +1,45 @@
+services:
+  storage-webapi:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: 8080
+      ConnectionStrings__ImageHosting: "Host=postgres;Port=5432;Database=image_hosting;Username=image_hosting;Password=P@ssw0rd;Include Error Detail=true"
+      Minio__AccessKey: minioadmin
+      Minio__SecretKey: minioadmin
+      Minio__Secure: false
+    ports:
+      - "127.0.0.1:8080:8080"
+
+  image-tagger:
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      ConnectionStrings__ImageHosting: "Host=postgres;Port=5432;Database=image_hosting;Username=image_hosting;Password=P@ssw0rd;Include Error Detail=true"
+      
+  minio:
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      
+  postgres:
+    environment:
+      POSTGRES_DB: image_hosting
+      POSTGRES_USER: image_hosting
+      POSTGRES_PASSWORD: P@ssw0rd
+      
+  kafka-ui:
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      SERVER_PORT: 8000
+      
+  resizer:
+    environment:
+      MINIO_USER: minioadmin
+      MINIO_PASSWORD: minioadmin
+      
+  recognizer:
+    environment:
+      MINIO_USER: minioadmin
+      MINIO_PASSWORD: minioadmin
+      DEBUG_CATEGORIES: true
+

@@ -1,0 +1,23 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "storage-webapi",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
+      "serviceActions": {
+        "kafka-init-categories": "StartWithoutDebugging",
+        "kafka": "StartWithoutDebugging",
+        "kafka-init-new-images": "StartWithoutDebugging",
+        "kafka-ui": "StartWithoutDebugging",
+        "minio": "StartWithoutDebugging",
+        "postgres": "StartWithoutDebugging",
+        "resizer": "StartWithoutDebugging",
+        "image-tagger": "StartDebugging",
+        "recognizer": "StartWithoutDebugging",
+        "storage-webapi": "StartDebugging"
+      }
+    }
+  }
+}

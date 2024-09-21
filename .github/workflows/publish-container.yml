@@ -11,8 +11,8 @@ env:
 
 jobs:
   publish-container:
-
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
       packages: write
