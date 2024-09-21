@@ -10,7 +10,7 @@ namespace ImageHosting.Storage.Infrastructure.Services;
 
 public class MetadataService(IImageHostingDbContext dbContext, ILogger<MetadataService> logger) : IMetadataService
 {
-    public async Task<ImageUploadedDto> WriteMetadataAsync(ImageMetadataDto imageMetadataDto,
+    public async Task<ImageUploadedDTO> WriteMetadataAsync(ImageMetadataDTO imageMetadataDto,
         CancellationToken cancellationToken = default)
     {
         var entity = imageMetadataDto.ToEntity();
@@ -18,7 +18,7 @@ public class MetadataService(IImageHostingDbContext dbContext, ILogger<MetadataS
         await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         logger.LogMetadataWritten(entity.Id);
-        return ImageUploadedDto.From(entity);
+        return ImageUploadedDTO.From(entity);
     }
 
     public async Task DeleteMetadataAsync(ImageId id, CancellationToken cancellationToken = default)

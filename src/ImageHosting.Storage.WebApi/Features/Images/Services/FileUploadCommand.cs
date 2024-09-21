@@ -31,10 +31,10 @@ public class FileUploadCommand(
 {
     public Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        return fileService.WriteFileAsync(new WriteFileDto(userId, imageId, length, contentType, stream),
+        return fileService.WriteFileAsync(new WriteFileDTO(userId, imageId, length, contentType, stream),
             cancellationToken);
     }
 
     public Task RollbackAsync(CancellationToken cancellationToken = default) =>
-        fileService.RemoveFileAsync(new RemoveFileDto(userId, imageId), cancellationToken);
+        fileService.RemoveFileAsync(new RemoveFileDTO(userId, imageId), cancellationToken);
 }

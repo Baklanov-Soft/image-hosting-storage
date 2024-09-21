@@ -3,7 +3,7 @@ using ImageHosting.Storage.Domain.ValueTypes;
 
 namespace ImageHosting.Storage.Application.DTOs;
 
-public class ImageMetadataDto(
+public class ImageMetadataDTO(
     ImageId id,
     string objectName,
     UserId userId,

@@ -28,7 +28,7 @@ public class MetadataUploadCommand(
     : IRollbackCommand
 {
     public Task ExecuteAsync(CancellationToken cancellationToken = default) =>
-        metadataService.WriteMetadataAsync(new ImageMetadataDto(imageId, objectName, userId, uploadedAt, hidden),
+        metadataService.WriteMetadataAsync(new ImageMetadataDTO(imageId, objectName, userId, uploadedAt, hidden),
             cancellationToken);
 
     public Task RollbackAsync(CancellationToken cancellationToken = default) =>

@@ -12,7 +12,7 @@ namespace ImageHosting.Storage.Infrastructure.Services;
 
 public class FileService(IMinioClient minioClient, ILogger<FileService> logger) : IFileService
 {
-    public async Task<UploadFileDto> WriteFileAsync(WriteFileDto writeFileDto,
+    public async Task<UploadFileDTO> WriteFileAsync(WriteFileDTO writeFileDto,
         CancellationToken cancellationToken = default)
     {
         var bucketExistsArgs = new BucketExistsArgs().WithBucket(writeFileDto.UserId);
@@ -40,7 +40,7 @@ public class FileService(IMinioClient minioClient, ILogger<FileService> logger) 
             await minioClient.PutObjectAsync(putObjectArgs, cancellationToken).ConfigureAwait(false);
 
         logger.LogFileWritten(writeFileDto.ImageId, writeFileDto.UserId);
-        return putObjectResponse.ToDto();
+        return putObjectResponse.ToDTO();
     }
 
     private async Task<bool> IsObjectExistsAsync(string bucketId, string objectName,
@@ -61,7 +61,7 @@ public class FileService(IMinioClient minioClient, ILogger<FileService> logger) 
         }
     }
 
-    public async Task RemoveFileAsync(RemoveFileDto removeFileDto, CancellationToken cancellationToken = default)
+    public async Task RemoveFileAsync(RemoveFileDTO removeFileDto, CancellationToken cancellationToken = default)
     {
         var bucketExistsArgs = new BucketExistsArgs().WithBucket(removeFileDto.UserId);
         var foundBucket =

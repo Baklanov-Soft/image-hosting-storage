@@ -7,7 +7,7 @@ namespace ImageHosting.Storage.WebApi.Features.Images.Handlers;
 
 public interface IUploadFileHandler
 {
-    Task<ImageUploadedDto> UploadAsync(UserId userId, ImageId imageId, IFormFile formFile, bool hidden,
+    Task<ImageUploadedDTO> UploadAsync(UserId userId, ImageId imageId, IFormFile formFile, bool hidden,
         DateTime uploadedAt,
         CancellationToken cancellationToken = default);
 }
@@ -18,7 +18,7 @@ public class UploadFileHandler(
     IPublishNewMessageCommandFactory publishNewMessageCommandFactory)
     : IUploadFileHandler
 {
-    public async Task<ImageUploadedDto> UploadAsync(UserId userId, ImageId imageId, IFormFile formFile, bool hidden,
+    public async Task<ImageUploadedDTO> UploadAsync(UserId userId, ImageId imageId, IFormFile formFile, bool hidden,
         DateTime uploadedAt, CancellationToken cancellationToken = default)
     {
         await using var stream = formFile.OpenReadStream();
@@ -36,6 +36,6 @@ public class UploadFileHandler(
 
         await commands.ExecuteAsync(cancellationToken).ConfigureAwait(false);
 
-        return new ImageUploadedDto(imageId, userId, formFile.FileName, hidden, uploadedAt);
+        return new ImageUploadedDTO(imageId, userId, formFile.FileName, hidden, uploadedAt);
     }
 }

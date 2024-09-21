@@ -4,6 +4,6 @@ namespace ImageHosting.Storage.Application.Services;
 
 public interface IFileService
 {
-    Task<UploadFileDto> WriteFileAsync(WriteFileDto writeFileDto, CancellationToken cancellationToken = default);
-    Task RemoveFileAsync(RemoveFileDto removeFileDto, CancellationToken cancellationToken = default);
+    Task<UploadFileDTO> WriteFileAsync(WriteFileDTO writeFileDto, CancellationToken cancellationToken = default);
+    Task RemoveFileAsync(RemoveFileDTO removeFileDto, CancellationToken cancellationToken = default);
 }

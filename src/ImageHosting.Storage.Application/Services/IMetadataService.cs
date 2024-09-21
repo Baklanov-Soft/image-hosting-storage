@@ -5,7 +5,7 @@ namespace ImageHosting.Storage.Application.Services;
 
 public interface IMetadataService
 {
-    Task<ImageUploadedDto> WriteMetadataAsync(ImageMetadataDto imageMetadataDto,
+    Task<ImageUploadedDTO> WriteMetadataAsync(ImageMetadataDTO imageMetadataDto,
         CancellationToken cancellationToken = default);
 
     Task DeleteMetadataAsync(ImageId id, CancellationToken cancellationToken = default);

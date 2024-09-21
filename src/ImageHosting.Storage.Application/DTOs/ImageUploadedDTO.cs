@@ -3,7 +3,7 @@ using ImageHosting.Storage.Domain.ValueTypes;
 
 namespace ImageHosting.Storage.Application.DTOs;
 
-public class ImageUploadedDto(
+public class ImageUploadedDTO(
     ImageId id,
     UserId userId,
     string objectName,
@@ -16,8 +16,8 @@ public class ImageUploadedDto(
     public bool Hidden { get; } = hidden;
     public DateTime UploadedAt { get; } = uploadedAt;
 
-    public static ImageUploadedDto From(Image image)
+    public static ImageUploadedDTO From(Image image)
     {
-        return new ImageUploadedDto(image.Id, image.UserId, image.ObjectName, image.Hidden, image.UploadedAt);
+        return new ImageUploadedDTO(image.Id, image.UserId, image.ObjectName, image.Hidden, image.UploadedAt);
     }
 }

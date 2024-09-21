@@ -54,7 +54,7 @@ public class UploadFileTests
         var metadataService = Substitute.For<IMetadataService>();
         var metadataUploadCommandFactory = new MetadataUploadCommandFactory(metadataService);
         var fileService = Substitute.For<IFileService>();
-        fileService.WriteFileAsync(Arg.Any<WriteFileDto>())
+        fileService.WriteFileAsync(Arg.Any<WriteFileDTO>())
             .ThrowsAsync(new ImageObjectAlreadyExistsException(userId.ToString(), formFile.FileName));
         var newImageProducer = Substitute.For<INewImageProducer>();
         var publishNewMessageCommandFactory = new PublishNewMessageCommandFactory(newImageProducer);
@@ -79,7 +79,7 @@ public class UploadFileTests
         const bool hidden = false;
         var uploadedAt = DateTime.Now;
         var metadataService = Substitute.For<IMetadataService>();
-        metadataService.WriteMetadataAsync(Arg.Any<ImageMetadataDto>())
+        metadataService.WriteMetadataAsync(Arg.Any<ImageMetadataDTO>())
             .ThrowsAsync<DbUpdateException>();
         var metadataUploadCommandFactory = new MetadataUploadCommandFactory(metadataService);
         var fileService = Substitute.For<IFileService>();
