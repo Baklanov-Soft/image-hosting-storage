@@ -12,16 +12,16 @@ public static class ServiceCollectionExtensions
             .BindConfiguration(ImagesOptions.SectionName)
             .ValidateDataAnnotations();
 
-
         return services
-            .AddTransient<IFileUploadCommandFactory, FileUploadCommandFactory>()
-            .AddTransient<IMetadataUploadCommandFactory, MetadataUploadCommandFactory>()
-            .AddTransient<IPublishNewMessageCommandFactory, PublishNewMessageCommandFactory>()
-            .AddTransient<IUploadFileHandler, UploadFileHandler>()
-            .AddTransient<IGetImageAssetHandler, GetImageAssetHandler>()
-            .AddTransient<IGetImageHandler, GetImageHandler>()
-            .AddTransient<IUpdateNameHandler, UpdateNameHandler>()
-            .AddTransient<IAddTagsHandler, AddTagsHandler>()
-            .AddTransient<IDeleteTagsHandler, DeleteTagsHandler>();
+            .AddScoped<IFileUploadCommandFactory, FileUploadCommandFactory>()
+            .AddScoped<IMetadataUploadCommandFactory, MetadataUploadCommandFactory>()
+            .AddScoped<IPublishNewMessageCommandFactory, PublishNewMessageCommandFactory>()
+            .AddScoped<IUploadFileHandler, UploadFileHandler>()
+            .AddScoped<IGetImageAssetHandler, GetImageAssetHandler>()
+            .AddScoped<IGetImageHandler, GetImageHandler>()
+            .AddScoped<IUpdateNameHandler, UpdateNameHandler>()
+            .AddScoped<IAddTagsHandler, AddTagsHandler>()
+            .AddScoped<IDeleteTagsHandler, DeleteTagsHandler>()
+            .AddScoped<IGetAllImageTagsHandler, GetAllImageTagsHandler>();
     }
 }

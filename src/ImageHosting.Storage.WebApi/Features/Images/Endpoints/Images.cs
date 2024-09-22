@@ -1,9 +1,9 @@
-using System.Security.Claims;
 using ImageHosting.Storage.Domain.ValueTypes;
 using ImageHosting.Storage.WebApi.Features.Images.Handlers;
 using ImageHosting.Storage.WebApi.Features.Images.Models;
 using ImageHosting.Storage.WebApi.Filters;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ImageHosting.Storage.WebApi.Features.Images.Endpoints;
 
@@ -98,9 +98,18 @@ public static class Images
                     await deleteTagsHandler.DeleteAsync(id, tag, cancellationToken);
                     return TypedResults.Ok();
                 })
-            .WithName("DeleteTags")
+            .WithName("BatchDeleteTags")
             .WithTags("Tags")
             .MapToApiVersion(1);
+
+        tags.MapGet("", async ([FromRoute] ImageId id, [FromServices] IGetAllImageTagsHandler getAllImageTagsHandler, CancellationToken ct) =>
+        {
+            var tags = await getAllImageTagsHandler.GetTagsAsync(id, ct);
+            return TypedResults.Ok(tags);
+        })
+        .WithName("GetImageTags")
+        .WithTags("Tags")
+        .MapToApiVersion(1);
 
         return images;
     }
