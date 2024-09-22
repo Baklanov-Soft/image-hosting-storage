@@ -34,4 +34,10 @@ public static partial class Log
         Level = LogLevel.Information,
         Message = "Message published with imageId {ImageId} and bucketId {BucketId}.")]
     public static partial void LogMessagePublished(this ILogger logger, ImageId imageId, UserId bucketId);
+
+    [LoggerMessage(
+        EventId = ImageHostingEvents.ImageTagAssigned,
+        Level = LogLevel.Information,
+        Message = "Tags {Tags} are assigned to image {ImageId}.")]
+    public static partial void LogImageTagsAssigned(this ILogger logger, IEnumerable<string> tags, ImageId imageId);
 }
