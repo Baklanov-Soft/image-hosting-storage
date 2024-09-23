@@ -7,8 +7,8 @@ public class Image
     public ImageId Id { get; set; }
 
     public UserId UserId { get; set; }
-    
-    public required string ObjectName { get; set; }
+
+    public string ObjectName { get; set; } = null!;
     public bool Hidden { get; set; }
     public DateTime UploadedAt { get; set; }
 

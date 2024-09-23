@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IUpdateNameHandler, UpdateNameHandler>()
             .AddScoped<IAddTagsHandler, AddTagsHandler>()
             .AddScoped<IDeleteTagsHandler, DeleteTagsHandler>()
-            .AddScoped<IGetAllImageTagsHandler, GetAllImageTagsHandler>();
+            .AddScoped<IGetAllImageTagsHandler, GetAllImageTagsHandler>()
+            .AddScoped<ISetHidenessHandler, SetHidenessHandler>();
     }
 }

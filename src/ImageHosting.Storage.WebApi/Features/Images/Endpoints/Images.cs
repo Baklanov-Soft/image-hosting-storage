@@ -79,6 +79,24 @@ public static class Images
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .MapToApiVersion(1);
 
+        images.MapPut(pattern: "{id}/hide", async ([FromRoute] ImageId id, [FromServices] ISetHidenessHandler setHidenessHandler, CancellationToken ct) =>
+        {
+            var readImage = await setHidenessHandler.SetHidenessAsync(id, true, ct);
+            return TypedResults.Ok(readImage);
+        })
+        .WithName("HideImage")
+        .WithTags("Images")
+        .MapToApiVersion(1);
+
+        images.MapPut(pattern: "{id}/unhide", async ([FromRoute] ImageId id, [FromServices] ISetHidenessHandler setHidenessHandler, CancellationToken ct) =>
+        {
+            var readImage = await setHidenessHandler.SetHidenessAsync(id, false, ct);
+            return TypedResults.Ok(readImage);
+        })
+        .WithName("UnhideImage")
+        .WithTags("Images")
+        .MapToApiVersion(1);
+
         var tags = images.MapGroup(prefix: "{id}/tags");
 
         tags.MapPost(pattern: "", handler: async ([FromRoute] ImageId id, [FromBody] AddTagsCommand addTagsCommand,
@@ -102,7 +120,7 @@ public static class Images
             .WithTags("Tags")
             .MapToApiVersion(1);
 
-        tags.MapGet("", async ([FromRoute] ImageId id, [FromServices] IGetAllImageTagsHandler getAllImageTagsHandler, CancellationToken ct) =>
+        tags.MapGet(pattern: "", async ([FromRoute] ImageId id, [FromServices] IGetAllImageTagsHandler getAllImageTagsHandler, CancellationToken ct) =>
         {
             var tags = await getAllImageTagsHandler.GetTagsAsync(id, ct);
             return TypedResults.Ok(tags);
