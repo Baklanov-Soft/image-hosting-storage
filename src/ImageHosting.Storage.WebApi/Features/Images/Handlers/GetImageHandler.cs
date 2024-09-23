@@ -1,6 +1,5 @@
 using ImageHosting.Storage.Domain.ValueTypes;
 using ImageHosting.Storage.Infrastructure.DbContexts;
-using ImageHosting.Storage.WebApi.Features.Images.Exceptions;
 using ImageHosting.Storage.WebApi.Features.Images.Extensions;
 using ImageHosting.Storage.WebApi.Features.Images.Models;
 using ImageHosting.Storage.WebApi.Options;
@@ -11,25 +10,19 @@ namespace ImageHosting.Storage.WebApi.Features.Images.Handlers;
 
 public interface IGetImageHandler
 {
-    Task<ReadImage> GetAsync(ImageId id, CancellationToken cancellationToken = default);
+    Task<ReadImage?> GetAsync(ImageId id, CancellationToken cancellationToken = default);
 }
 
 public class GetImageHandler(IImageHostingDbContext dbContext, IOptions<ImagesOptions> options) : IGetImageHandler
 {
-    private readonly ImagesOptions _options = options.Value;
+    private readonly Uri _publicUrl = options.Value.PublicUrl;
 
-    public async Task<ReadImage> GetAsync(ImageId id, CancellationToken cancellationToken = default)
+    public Task<ReadImage?> GetAsync(ImageId id, CancellationToken cancellationToken = default)
     {
-        var image = await dbContext.Images
+        return dbContext.Images
             .AsNoTracking()
             .Where(i => i.Id == id)
-            .ToReadImages(_options.BaseUri)
+            .ToReadImages(_publicUrl)
             .FirstOrDefaultAsync(cancellationToken);
-        if (image is null)
-        {
-            throw new ImageMetadataNotFoundException(id);
-        }
-
-        return image;
     }
 }

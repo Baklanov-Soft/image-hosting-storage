@@ -6,5 +6,5 @@ public class ImagesOptions
 {
     public const string SectionName = "Images";
 
-    [Required] public required Uri BaseUri { get; init; }
+    [Required] public required Uri PublicUrl { get; init; }
 }
