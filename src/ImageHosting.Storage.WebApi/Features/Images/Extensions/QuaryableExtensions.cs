@@ -6,7 +6,7 @@ namespace ImageHosting.Storage.WebApi.Features.Images.Extensions;
 
 public static class QueryableExtensions
 {
-    public static IQueryable<ReadImage> ToReadImages(this IQueryable<Image> queryable, Uri baseUri)
+    public static IQueryable<ReadImage> ToReadImages(this IQueryable<Image> queryable, Uri publicUrl)
     {
         return queryable.Select(i => new ReadImage
         {
@@ -15,7 +15,7 @@ public static class QueryableExtensions
             UploadedAt = i.UploadedAt,
             Hidden = i.Hidden,
             Categories = i.Tags.Select(it => it.TagName).ToList(),
-            Asset = new Uri(baseUri, $"api/v1/images/{i.Id}/asset")
+            Asset = new Uri(publicUrl, $"api/v1/images/{i.Id}/asset")
         }).AsSplitQuery();
     }
 }

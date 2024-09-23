@@ -14,7 +14,7 @@ services:
       Kafka__BootstrapServers__0: kafka:9092
       Kafka__NewImagesProducer__TopicName: new-images.v1
       Minio__Endpoint: minio:9000
-      Images__BaseUri: "http://localhost:8080"
+      Images__PublicUrl: "http://localhost:8080"
     depends_on:
       - minio
       - postgres
