@@ -19,21 +19,26 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
 
       - name: Restore dependencies
+        working-directory: ./tests/ImageHosting.Storage.UnitTests
         run: dotnet restore
 
       - name: Build
+        working-directory: ./tests/ImageHosting.Storage.UnitTests
         run: dotnet build --no-restore /p:ContinuousIntegrationBuild=true
 
       - name: Test
+        working-directory: ./tests/ImageHosting.Storage.UnitTests
         run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: true
-          directory: ImageHosting.Storage.UnitTests
+          directory: ./tests/ImageHosting.Storage.UnitTests
           file: coverage.opencover.xml
           flags: unittests
           token: ${{ secrets.CODECOV_TOKEN }}
