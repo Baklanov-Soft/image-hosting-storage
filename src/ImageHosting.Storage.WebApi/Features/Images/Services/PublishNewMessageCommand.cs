@@ -22,7 +22,7 @@ public class PublishNewMessageCommand(INewImageProducer newImageProducer, UserId
 {
     public Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        return newImageProducer.SendAsync(new NewImage { BucketId = userId, ImageId = imageId }, cancellationToken);
+        return newImageProducer.SendAsync(new NewImage { Bucket = userId, ImageId = imageId }, cancellationToken);
     }
 
     public Task RollbackAsync(CancellationToken cancellationToken = default)

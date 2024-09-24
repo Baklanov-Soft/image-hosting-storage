@@ -12,6 +12,6 @@ public class NewImageProducer(ITopicProducer<NewImage> messageProducer, ILogger<
     public async Task SendAsync(NewImage newImage, CancellationToken cancellationToken = default)
     {
         await messageProducer.Produce(newImage, cancellationToken);
-        logger.LogMessagePublished(newImage.ImageId, newImage.BucketId);
+        logger.LogMessagePublished(newImage.ImageId, newImage.Bucket);
     }
 }
