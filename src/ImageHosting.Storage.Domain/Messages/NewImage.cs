@@ -1,10 +1,13 @@
-using System.Text.Json.Serialization;
 using ImageHosting.Storage.Domain.ValueTypes;
+using System.Text.Json.Serialization;
 
 namespace ImageHosting.Storage.Domain.Messages;
 
 public class NewImage
 {
-    [JsonPropertyName("bucketId")] public required UserId BucketId { get; init; }
-    [JsonPropertyName("imageId")] public required ImageId ImageId { get; init; }
+    [JsonPropertyName("bucket")] public UserId Bucket { get; set; }
+    [JsonIgnore] public ImageId ImageId { get; set; }
+
+    [JsonPropertyName("prefix")] public string Prefix => ImageId.ToString();
+    [JsonPropertyName("image")] public string ImageName => "original.jpg";
 }

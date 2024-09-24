@@ -15,31 +15,32 @@ public class FileService(IMinioClient minioClient, ILogger<FileService> logger) 
     public async Task<UploadFileDTO> WriteFileAsync(WriteFileDTO writeFileDto,
         CancellationToken cancellationToken = default)
     {
-        var bucketExistsArgs = new BucketExistsArgs().WithBucket(writeFileDto.UserId);
+        var bucketExistsArgs = new BucketExistsArgs().WithBucket(writeFileDto.Bucket);
         var foundBucket =
             await minioClient.BucketExistsAsync(bucketExistsArgs, cancellationToken).ConfigureAwait(false);
         if (!foundBucket)
         {
-            throw new UserBucketDoesNotExistsException(writeFileDto.UserId);
+            throw new UserBucketDoesNotExistsException(writeFileDto.Bucket);
         }
 
-        var isObjectExists = await IsObjectExistsAsync(writeFileDto.UserId, writeFileDto.ImageId, cancellationToken);
+        var isObjectExists = await IsObjectExistsAsync(writeFileDto.Bucket, writeFileDto.FullImageName, cancellationToken)
+            .ConfigureAwait(false);
         if (isObjectExists)
         {
-            throw new ImageObjectAlreadyExistsException(writeFileDto.UserId, writeFileDto.ImageId);
+            throw new ImageObjectAlreadyExistsException(writeFileDto.Bucket, writeFileDto.ImageId);
         }
 
         var putObjectArgs = new PutObjectArgs()
-            .WithBucket(writeFileDto.UserId)
+            .WithBucket(writeFileDto.Bucket)
             .WithObjectSize(writeFileDto.Length)
             .WithContentType(writeFileDto.ContentType)
             .WithStreamData(writeFileDto.Stream)
-            .WithObject(writeFileDto.ImageId);
+            .WithObject(writeFileDto.FullImageName);
 
         var putObjectResponse =
             await minioClient.PutObjectAsync(putObjectArgs, cancellationToken).ConfigureAwait(false);
 
-        logger.LogFileWritten(writeFileDto.ImageId, writeFileDto.UserId);
+        logger.LogFileWritten(writeFileDto.ImageId, writeFileDto.Bucket);
         return putObjectResponse.ToDTO();
     }
 
@@ -63,19 +64,19 @@ public class FileService(IMinioClient minioClient, ILogger<FileService> logger) 
 
     public async Task RemoveFileAsync(RemoveFileDTO removeFileDto, CancellationToken cancellationToken = default)
     {
-        var bucketExistsArgs = new BucketExistsArgs().WithBucket(removeFileDto.UserId);
+        var bucketExistsArgs = new BucketExistsArgs().WithBucket(removeFileDto.Bucket);
         var foundBucket =
             await minioClient.BucketExistsAsync(bucketExistsArgs, cancellationToken).ConfigureAwait(false);
         if (!foundBucket)
         {
-            throw new UserBucketDoesNotExistsException(removeFileDto.UserId);
+            throw new UserBucketDoesNotExistsException(removeFileDto.Bucket);
         }
 
         var removeObjectArgs = new RemoveObjectArgs()
-            .WithBucket(removeFileDto.UserId)
-            .WithObject(removeFileDto.ImageId);
+            .WithBucket(removeFileDto.Bucket)
+            .WithObject(removeFileDto.FullImageName);
         await minioClient.RemoveObjectAsync(removeObjectArgs, cancellationToken).ConfigureAwait(false);
 
-        logger.LogFileRemoved(removeFileDto.ImageId, removeFileDto.UserId);
+        logger.LogFileRemoved(removeFileDto.ImageId, removeFileDto.Bucket);
     }
 }
