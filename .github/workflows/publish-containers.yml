@@ -1,4 +1,4 @@
-name: Publish Tagger Hosted Service to GitHub container registry
+name: Publish to GitHub container registry
 
 on:
   push:
@@ -6,12 +6,23 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: image-hosting-storage-tagger
-
+  ORGANIZATION: baklanov-soft
 
 jobs:
-  publish-container:
+  publish-containers:
     runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64/v8
+        include:
+          - dockerfile: ./src/ImageHosting.Storage.WebApi/Dockerfile
+            image: ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/image-hosting-storage-webapi
+          - dockerfile: ./src/ImageHosting.Storage.Tagger/Dockerfile
+            image: ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/image-hosting-storage-tagger
 
     permissions:
       contents: read
@@ -31,6 +42,9 @@ jobs:
         uses: sigstore/cosign-installer@v3.3.0
         with:
           cosign-release: 'v2.2.2'
+          
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
@@ -54,7 +68,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+          images: ${{ matrix.image }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -63,7 +77,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./src/ImageHosting.Storage.Tagger/Dockerfile
+          file: ${{ matrix.dockerfile }}
+          platforms: ${{ matrix.platform }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
