@@ -9,7 +9,7 @@ public class AssignTagsConsumer(IAssignTagsService assignTagsService) : IConsume
     public Task Consume(ConsumeContext<Batch<CategorizedNewImage>> context)
     {
         var messages = context.Message
-            .GroupBy(consumeContext => consumeContext.Message.ImageId,
+            .GroupBy(consumeContext => consumeContext.Message.Image.ImageId,
                 consumeContext => consumeContext.Message.Categories)
             .ToDictionary(grouping => grouping.Key,
                 grouping => grouping.SelectMany(categories => categories)
