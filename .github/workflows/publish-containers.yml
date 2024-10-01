@@ -6,7 +6,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  ORGANIZATION: baklanov-soft
 
 jobs:
   publish-containers:
@@ -20,9 +19,9 @@ jobs:
           - linux/arm64/v8
         include:
           - dockerfile: ./src/ImageHosting.Storage.WebApi/Dockerfile
-            image: ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/image-hosting-storage-webapi
+            image: ghcr.io/baklanov-soft/image-hosting-storage-webapi
           - dockerfile: ./src/ImageHosting.Storage.Tagger/Dockerfile
-            image: ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/image-hosting-storage-tagger
+            image: ghcr.io/baklanov-soft/image-hosting-storage-tagger
 
     permissions:
       contents: read
