@@ -11,7 +11,7 @@
         "minio": "StartWithoutDebugging",
         "postgres": "StartWithoutDebugging",
         "resizer": "StartWithoutDebugging",
-        "image-tagger": "StartWithoutDebugging",
+        "image-tagger": "DoNotStart",
         "recognizer": "StartWithoutDebugging",
         "storage-webapi": "DoNotStart"
       }

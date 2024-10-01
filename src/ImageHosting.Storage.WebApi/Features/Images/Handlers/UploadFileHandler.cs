@@ -27,7 +27,7 @@ public class UploadFileHandler(
             fileUploadCommandFactory.CreateCommand(userId, imageId, formFile.Length, formFile.ContentType, stream);
         var metadataUploadCommand =
             metadataUploadCommandFactory.CreateCommand(userId, imageId, formFile.FileName, hidden, uploadedAt);
-        var publishNewMessageCommand = publishNewMessageCommandFactory.CreateCommand(userId, imageId);
+        var publishNewMessageCommand = publishNewMessageCommandFactory.CreateCommand(userId, imageId, formFile.FileName);
 
         var commands = new RollbackCommands();
         commands.Add(fileUploadCommand);

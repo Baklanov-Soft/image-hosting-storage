@@ -1,6 +1,7 @@
 using CommunityToolkit.Diagnostics;
 using Confluent.Kafka;
 using ImageHosting.Storage.Domain.Messages;
+using ImageHosting.Storage.Domain.Serialization;
 using ImageHosting.Storage.Infrastructure.Extensions.DependencyInjection;
 using ImageHosting.Storage.Tagger;
 using ImageHosting.Storage.Tagger.Options;
@@ -15,7 +16,14 @@ Guard.IsNotNull(options);
 
 builder.Services.AddMassTransit(massTransit =>
 {
-    massTransit.UsingInMemory();
+    massTransit.UsingInMemory((context, configurator) =>
+    {
+        configurator.ConfigureJsonSerializerOptions(jsonSerializerOptions =>
+        {
+            jsonSerializerOptions.Converters.Add(new NewImageJsonConverter());
+            return jsonSerializerOptions;
+        });
+    });
 
     massTransit.AddRider(rider =>
     {

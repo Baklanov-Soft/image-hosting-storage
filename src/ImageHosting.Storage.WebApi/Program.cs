@@ -4,6 +4,7 @@ using Hellang.Middleware.ProblemDetails;
 using Hellang.Middleware.ProblemDetails.Mvc;
 using ImageHosting.Storage.Application.Services;
 using ImageHosting.Storage.Domain.Messages;
+using ImageHosting.Storage.Domain.Serialization;
 using ImageHosting.Storage.Domain.ValueTypes;
 using ImageHosting.Storage.Infrastructure.DbContexts;
 using ImageHosting.Storage.Infrastructure.Extensions.DependencyInjection;
@@ -58,7 +59,14 @@ try
 
     builder.Services.AddMassTransit(massTransit =>
     {
-        massTransit.UsingInMemory();
+        massTransit.UsingInMemory((context, configurator) =>
+        {
+            configurator.ConfigureJsonSerializerOptions(jsonSerializerOptions =>
+            {
+                jsonSerializerOptions.Converters.Add(new NewImageJsonConverter());
+                return jsonSerializerOptions;
+            });
+        });
 
         massTransit.AddRider(rider =>
         {
